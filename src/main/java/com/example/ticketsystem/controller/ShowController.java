@@ -6,6 +6,7 @@ import com.example.ticketsystem.mapper.ShowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class ShowController {
 
         List<Show> shows = showMapper.findHomeShows(city, limit);
 
-        //转换响应格式（隐藏敏感信息，添加业务字段）
+        //构建响应数据
         List<Map<String, Object>> result = shows.stream().map(show -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", show.getId());   //演出ID
@@ -70,7 +71,7 @@ public class ShowController {
 
         List<Show> shows = showMapper.searchByKeyword(keyword.trim());
 
-        //响应（和首页列表类似）
+        //构建响应数据
         List<Map<String, Object>> result = shows.stream().map(show -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", show.getId());
@@ -114,7 +115,7 @@ public class ShowController {
         int total = showMapper.countByConditions(city, category);
         int totalPages = (int) Math.ceil((double) total / size);
 
-        //响应
+        //构建响应数据
         List<Map<String, Object>> showList = shows.stream().map(show -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", show.getId());
@@ -160,5 +161,71 @@ public class ShowController {
     public ApiResponse<Object> getAllCategories() {
         List<String> categories = showMapper.findAllCategories();
         return ApiResponse.success(categories);
+    }
+
+    /**
+     * 获取演出详情
+     * GET /shows/{id}
+     * Path Parameters:
+     *  - id:演出ID(必填)
+     */
+    @GetMapping("/{id}")
+    public ApiResponse<?> getShowDetail(@PathVariable Long id) {
+        //查询演出基本信息
+        Show show = showMapper.findById(id);
+
+        if (show == null) {
+            return ApiResponse.error(404, "演出不存在");
+        }
+
+        //响应数据
+        Map<String, Object> result = new HashMap<>();
+        //基本信息
+        result.put("id", show.getId());
+        result.put("title", show.getTitle());
+        result.put("description", show.getDescription());
+        result.put("category", show.getCategory());
+        result.put("city", show.getCity());
+        result.put("venue", show.getVenue());
+        result.put("coverImage", show.getCoverImage());
+        result.put("startTime", show.getStartTime());
+        result.put("endTime", show.getEndTime());
+        result.put("minPrice", show.getMinPrice());
+        result.put("maxPrice", show.getMaxPrice());
+        //业务状态
+        result.put("status", show.getStatus());
+        result.put("onSale", show.isOnSale());
+        result.put("hasStock", show.hasStock());
+        //场次信息
+        // TODO：此处为简化版，实际可能有多个场次
+        List<Map<String, Object>> sessions = new ArrayList<>();
+        Map<String, Object> session = new HashMap<>();
+        session.put("id", 1);
+        session.put("time", show.getStartTime());
+        session.put("status", show.isOnSale() ? "on_sale" : "not_start");
+        sessions.add(session);
+        result.put("sessions", sessions);
+        //票档信息
+        // TODO：此处为简化版，实际可能有多个票档）
+        List<Map<String, Object>> ticketTiers = new ArrayList<>();
+        //VIP票档
+        Map<String, Object> vipTier = new HashMap<>();
+        vipTier.put("id", 1);
+        vipTier.put("name", "VIP");
+        vipTier.put("price", show.getMaxPrice());
+        vipTier.put("stockAvailable", show.hasStock());
+        ticketTiers.add(vipTier);
+        //普通票档
+        Map<String, Object> standardTier = new HashMap<>();
+        standardTier.put("id", 2);
+        standardTier.put("name", "普通票");
+        standardTier.put("price", show.getMinPrice());
+        standardTier.put("stockAvailable", show.hasStock());
+        ticketTiers.add(standardTier);
+
+        result.put("ticketTiers", ticketTiers);
+
+        //返回
+        return ApiResponse.success(result);
     }
 }
