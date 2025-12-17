@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @author Lark
  * @ date 2025/12/12  16:52
- * @ description
+ * @ description：用户模块，含获取/修改用户信息、对收货地址的CRUD
  */
 
 @RestController
@@ -54,7 +54,11 @@ public class UserController {
 
     // ======== 用户信息相关接口 ========
 
-    //获取当前用户信息
+    /**获取当前用户信息
+     * GET /user/info
+     * Headers:
+     *  - Authorization: Bearer{token}
+     */
     @GetMapping("/info")
     public ApiResponse<Object> getUserInfo(@RequestHeader("Authorization") String authHeader) {
         Long userId = extractUserIdFromToken(authHeader);
@@ -71,7 +75,11 @@ public class UserController {
         return ApiResponse.success(userInfo);
     }
 
-    //修改个人信息
+    /**修改个人信息
+     * GET /user/info
+     * Headers:
+     *  - Authorization: Bearer {token}
+     */
     @PutMapping("/info")
     public ApiResponse<Object> updateUserInfo(
             @RequestHeader("Authorization") String authHeader,
@@ -111,7 +119,11 @@ public class UserController {
 
     // ======== 收货地址相关接口 ========
 
-    //获取收货地址列表
+    /**获取收货地址列表
+     * GET /user/addresses
+     * Headers:
+     *  - Authorization: Bearer{token}
+     */
     @GetMapping("/addresses")
     public ApiResponse<Object> getAddresses(@RequestHeader("Authorization") String authHeader) {
         Long userId = extractUserIdFromToken(authHeader);
@@ -127,7 +139,18 @@ public class UserController {
         return ApiResponse.success(addressDTOs);
     }
 
-    //添加收货地址
+    /**添加收货地址
+     * POST /user/address
+     * Headers:
+     *  - Authorization: Bearer{token}
+     * Body (application/json):
+     * {
+     *     "name":"收件人姓名",
+     *     "phone":"收件人电话",
+     *     "address":"详细地址",
+     *     "isDefalut":1 (可选，1-设为默认地址，0-非默认地址)
+     * }
+     */
     @PostMapping("/address")
     public ApiResponse<Object> addAddress(
             @RequestHeader("Authorization") String authHeader,
@@ -161,7 +184,20 @@ public class UserController {
         return ApiResponse.success("添加成功", AddressDTO.fromEntity(address));
     }
 
-    //修改收货地址
+    /**修改收货地址
+     * PUT /user/address/{id}
+     * Path Variable:
+     *  - id:地址ID（路径中替换{id}）
+     * Headers:
+     *  - Authorization: Bearer{token}
+     * Body(application/json，支持部分更新):
+     * {
+     *     "name":"string",(可选)
+     *     "phone":"string",(可选)
+     *     "address":"string",(可选)
+     *     "isDefault":1 (可选，1-设为默认地址，0-非默认地址)
+     * }
+     */
     @PutMapping("/address/{id}")
     public ApiResponse<Object> updateAddress(
             @RequestHeader("Authorization") String authHeader,
@@ -205,7 +241,13 @@ public class UserController {
         return ApiResponse.success("修改成功", AddressDTO.fromEntity(address));
     }
 
-    //删除收货地址
+    /**删除收货地址
+     * DELETE /user/address/{id}
+     * Path Variable:
+     *  - id:地址ID(路径中替换{id})
+     * Headers:
+     *  - Authorization:Bearer{token}
+     */
     @DeleteMapping("/address/{id}")
     public ApiResponse<Object> deleteAddress(
             @RequestHeader("Authorization") String authHeader,

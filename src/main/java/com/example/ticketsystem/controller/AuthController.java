@@ -22,7 +22,14 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    //登录接口
+    /**登录接口
+     * POST /auth/login
+     * Body (application/json)
+     * {
+     *     "username":"string",
+     *     "password":"string"
+     * }
+     */
     @PostMapping("/login")
     public ApiResponse<Object> login(@RequestBody LoginRequest request) {
         //调用Service登录
@@ -47,7 +54,11 @@ public class AuthController {
         return ApiResponse.success("登录成功", data);
     }
 
-    //退出接口
+    /**退出接口
+     * POST /auth/logout
+     * Headers:
+     *  - Authorization: Bearer{token}
+     */
     @PostMapping("/logout")
     public ApiResponse<Object> logout(@RequestHeader("Authorization") String authHeader) {
         return ApiResponse.success("退出成功");
