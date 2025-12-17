@@ -25,16 +25,18 @@ public class AuthController {
     //登录接口
     @PostMapping("/login")
     public ApiResponse<Object> login(@RequestBody LoginRequest request) {
-        //1.调用Service登录
+        //调用Service登录
         User user = authService.login(request.getUsername(), request.getPassword());
         if (user == null) {
             return ApiResponse.error(401, "用户名或密码错误");
         }
-        //2.检查用户状态（管理端还要完善启用/禁用用户的相关代码）
+        //检查用户状态
+        // TODO：（管理端还要完善启用/禁用用户的相关代码）
         if (user.getStatus() != null && user.getStatus() == 0) {
             return ApiResponse.error(403, "用户已被禁用");
         }
-        //3.返回token（先用这个假token，后续再改用JWT升级）
+        //返回token
+        // TODO：（先用这个假token，后续再改用JWT升级）
         String token = "user_" + user.getId() + "_" + System.currentTimeMillis();
         Map<String, Object> data = new HashMap<>();
         data.put("token", token);

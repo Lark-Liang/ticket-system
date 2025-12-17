@@ -51,7 +51,7 @@ public class UserInfoDTO {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // 转换方法
+    // 转换方法（返回安全且需要的字段）
     public static UserInfoDTO fromUser(User user) {
         if (user == null) return null;
 

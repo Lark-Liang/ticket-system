@@ -14,8 +14,8 @@ public class Address {
     private String phone;
     private String address;
     private Integer isDefault;  // 1-默认，0-非默认
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt= LocalDateTime.now();
+    private LocalDateTime updatedAt= LocalDateTime.now();
 
     //空参构造
     public Address() {}
