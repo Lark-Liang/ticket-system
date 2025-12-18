@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 /**
  * @author Lark
  * @ date 2025/12/11  20:45
- * @ description
+ * @ description 地址实体
  */
 public class Address {
     private Long id;
@@ -13,14 +13,14 @@ public class Address {
     private String name;
     private String phone;
     private String address;
-    private Integer isDefault;  // 1-默认，0-非默认
+    private Integer isDefault;  //1-默认，0-非默认
     private LocalDateTime createdAt= LocalDateTime.now();
     private LocalDateTime updatedAt= LocalDateTime.now();
 
     //空参构造
     public Address() {}
 
-    // Getter和Setter
+    //Getter和Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -45,7 +45,7 @@ public class Address {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // toString（调试用）
+    //toString（调试用）
     @Override
     public String toString() {
         return "Address{" +

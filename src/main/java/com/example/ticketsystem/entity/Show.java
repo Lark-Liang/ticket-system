@@ -5,24 +5,24 @@ import java.time.LocalDateTime;
 /**
  * @author Lark
  * @ date 2025/12/12  20:07
- * @ description
+ * @ description 演出实体
  */
 public class Show {
     private Long id;
-    private String title;           // 演出标题
-    private String description;     // 描述
-    private String category;        // 分类：concert(演唱会)、drama(话剧)、music(音乐会)、exhibition(展览)
-    private String city;            // 城市
-    private String venue;           // 场馆
-    private String coverImage;      // 封面图URL
-    private LocalDateTime startTime; // 开始时间
-    private LocalDateTime endTime;   // 结束时间
-    private Double minPrice;        // 最低价
-    private Double maxPrice;        // 最高价
-    private Integer status;         // 状态：1-上架 0-下架
-    private Integer totalStock;     // 总库存
-    private Integer availableStock; // 可用库存
-    private LocalDateTime saleStartTime; // 开售时间
+    private String title;   //演出标题
+    private String description;   //描述
+    private String category;   //分类：concert(演唱会)、drama(话剧)、music(音乐会)、exhibition(展览)
+    private String city;   //城市
+    private String venue;   //场馆
+    private String coverImage;   //封面图URL
+    private LocalDateTime startTime;   //开始时间
+    private LocalDateTime endTime;   //结束时间
+    private Double minPrice;   //最低价
+    private Double maxPrice;   //最高价
+    private Integer status;   //状态：1-上架 0-下架
+    private Integer totalStock;   //总库存
+    private Integer availableStock;   //可用库存
+    private LocalDateTime saleStartTime;   //开售时间
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -78,13 +78,13 @@ public class Show {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // ============ 业务方法 ============
-    // 判断是否已开票
+    //============ 业务方法 ============
+    //判断是否已开票
     public boolean isOnSale() {
         return saleStartTime != null && LocalDateTime.now().isAfter(saleStartTime);
     }
 
-    // 判断是否有库存（用户端用）
+    //判断是否有库存（用户端用）
     public boolean hasStock() {
         return availableStock != null && availableStock > 0;
     }

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 /**
  * @author Lark
  * @ date 2025/12/11  20:44
- * @ description
+ * @ description 用户实体
  */
 @Data
 public class User {
@@ -17,12 +17,12 @@ public class User {
     private String phone;
     private String email;
     private String avatar;
-    private Integer status;  // 1-正常，0-禁用
-    private String role;     // user, admin
+    private Integer status;  //1-正常，0-禁用
+    private String role;     //user, admin
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Getter和Setter
+    //Getter和Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
