@@ -49,3 +49,45 @@ CREATE TABLE IF NOT EXISTS show_info (
     INDEX idx_status (status),
     INDEX idx_sale_time (sale_start_time)
     );
+
+-- 演出场次表
+CREATE TABLE IF NOT EXISTS show_session (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    show_id BIGINT NOT NULL,
+    session_time TIMESTAMP NOT NULL,
+    status INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 票档表
+CREATE TABLE IF NOT EXISTS ticket_tier (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    show_id BIGINT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    description VARCHAR(200),
+    price DECIMAL(10, 2) NOT NULL,
+    total_stock INT NOT NULL,
+    available_stock INT NOT NULL,
+    version INT DEFAULT 0,  -- 乐观锁版本号
+    status INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+
+-- 订单表
+CREATE TABLE IF NOT EXISTS `order` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_no VARCHAR(50) NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL,
+    show_id BIGINT NOT NULL,
+    session_id BIGINT NOT NULL,
+    ticket_tier_id BIGINT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    address_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );

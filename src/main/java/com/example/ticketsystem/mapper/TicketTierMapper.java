@@ -11,11 +11,11 @@ import org.apache.ibatis.annotations.*;
 @Mapper
 public interface TicketTierMapper {
     // 根据ID查询票档（带乐观锁版本号）
-    @Select("SELECT * FROM ticket_tier WHERE id = #{id}")
+    @Select("SELECT * FROM TICKET_TIER WHERE id = #{id}")
     TicketTier findById(Long id);
 
     // 扣减库存（乐观锁实现）
-    @Update("UPDATE ticket_tier SET " +
+    @Update("UPDATE TICKET_TIER SET " +
             "available_stock = available_stock - #{quantity}, " +
             "version = version + 1, " +
             "updated_at = CURRENT_TIMESTAMP " +

@@ -263,11 +263,14 @@ public class ShowController {
     }
 
     /**抢票接口
-     *
-     * @param showId
-     * @param authHeader
-     * @param request
-     * @return
+     * POST /shows/{showId}/tickets/seckill
+     * Headers: Authorization: Bearer {token}
+     * Path Parameters:
+     *  - showId: 演出ID(必填)
+     * Body Parameters:
+     *  - sessionId: 场次ID(必填)
+     *  - ticketTierId: 票档ID(必填)
+     *  - quantity: 购买数量(必填，必须大于0)
      */
     @PostMapping("/{showId}/tickets/seckill")
     public ApiResponse<?> seckillTicket(
