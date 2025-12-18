@@ -1,8 +1,10 @@
 package com.example.ticketsystem.controller;
 
 import com.example.ticketsystem.dto.ApiResponse;
+import com.example.ticketsystem.dto.SeckillRequest;
 import com.example.ticketsystem.entity.Show;
 import com.example.ticketsystem.mapper.ShowMapper;
+import com.example.ticketsystem.service.SeckillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,9 @@ import java.util.Map;
 public class ShowController {
     @Autowired
     private ShowMapper showMapper;
+
+    @Autowired
+    private SeckillService seckillService;
 
     /**
      * 首页演出列表
@@ -227,5 +232,79 @@ public class ShowController {
 
         //返回
         return ApiResponse.success(result);
+    }
+
+    //提取Token中的用户ID（复用UserController的逻辑）
+    //TODO:后续创建一个TokenUtil工具类然后使用
+    private Long extractUserIdFromToken(String authHeader) {
+        //检查Authorization头
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        //提取token
+        String token = authHeader.substring(7).trim();
+        //解析token:"user_{userId}_{timestamp}"
+        if (token.startsWith("user_")) {
+            try {
+                //分割字符串：["user", "1", "1741812345678"]
+                String[] parts = token.split("_");
+                if (parts.length >= 2) {
+                    //第二部分就是userId
+                    return Long.parseLong(parts[1]);
+                }
+            } catch (NumberFormatException e) {
+                //如果第二部分不是数字，返回null
+                System.out.println("Token格式错误，无法解析userId: " + token);
+                return null;
+            }
+        }
+        System.out.println("无法识别的Token格式: " + token);
+        return null;
+    }
+
+    /**抢票接口
+     *
+     * @param showId
+     * @param authHeader
+     * @param request
+     * @return
+     */
+    @PostMapping("/{showId}/tickets/seckill")
+    public ApiResponse<?> seckillTicket(
+            @PathVariable Long showId,   //从URL路径获取演出ID
+            @RequestHeader("Authorization") String authHeader,   //从请求头获取token
+            @RequestBody SeckillRequest request) {   //从请求体获取JSON参数
+
+        try {
+            //解析token
+            Long userId = extractUserIdFromToken(authHeader);
+            if (userId == null) {
+                return ApiResponse.error(401, "未授权");
+            }
+
+            //参数验证
+            if (request.getQuantity() == null || request.getQuantity() <= 0) {
+                return ApiResponse.error(400, "购买数量必须大于0");
+            }
+            if (request.getTicketTierId() == null) {
+                return ApiResponse.error(400, "请选择票档");
+            }
+
+            //执行抢票逻辑
+            String orderNo = seckillService.seckillTicket(userId, showId, request);
+
+            //返回成功响应
+            Map<String, Object> data = new HashMap<>();
+            data.put("orderId", orderNo);
+            return ApiResponse.success("抢票成功", data);
+
+        } catch (RuntimeException e) {
+            //捕获业务异常
+            return ApiResponse.error(400, e.getMessage());
+        } catch (Exception e) {
+            //其他异常
+            e.printStackTrace();
+            return ApiResponse.error(500, "系统繁忙，请稍后重试");
+        }
     }
 }
