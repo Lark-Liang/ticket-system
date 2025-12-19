@@ -33,3 +33,12 @@ INSERT INTO ticket_tier (show_id, name, description, price, total_stock, availab
     (1, 'VIP票', '前区最佳观赏位置', 2580.00, 1000, 1000),
     (1, '普通票', '看台区域', 580.00, 9000, 9000),
     (1, '学生票', '凭学生证购买', 380.00, 2000, 2000);
+
+-- 为用户1添加3个测试订单
+INSERT INTO `order` (order_no, user_id, show_id, session_id, ticket_tier_id,
+                     quantity, unit_price, total_amount, status, created_at) VALUES
+   ('ORDER202412130001', 1, 1, 1, 1, 2, 2580.00, 5160.00, 'pending', '2024-12-13 09:00:00'),
+   ('ORDER202412130002', 1, 1, 1, 2, 1, 580.00, 580.00, 'paid', '2024-12-13 10:00:00'),
+   ('ORDER202412130003', 1, 2, 3, 1, 1, 180.00, 180.00, 'cancelled', '2024-12-13 11:00:00'),
+   ('ORDER202412130004', 1, 1, 1, 1, 1, 2580.00, 2580.00, 'pending', '2024-12-13 12:00:00'),
+   ('ORDER202412130005', 1, 3, 5, 2, 3, 880.00, 2640.00, 'paid', '2024-12-13 13:00:00');
