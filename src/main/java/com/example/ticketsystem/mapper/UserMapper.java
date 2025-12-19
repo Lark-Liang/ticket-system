@@ -17,4 +17,7 @@ public interface UserMapper {
     //根据ID查询用户
     @Select("SELECT * FROM users WHERE id = #{id}")
     User findById(Long id);
+    //根据邮箱查询用户
+    @Select("SELECT * FROM USERS WHERE email = #{email}")
+    User findByEmail(String email);
 }

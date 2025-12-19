@@ -2,6 +2,8 @@
 INSERT INTO users (username, password, nickname, phone, email, role) VALUES
     ('testuser', '123456', '测试用户', '13800138000', 'test@example.com', 'user'),
     ('admin', '123456', '管理员', '13900139000', 'admin@example.com', 'admin');
+UPDATE USERS SET email = 'test@example.com' WHERE username = 'testuser';
+UPDATE USERS SET email = 'admin@example.com' WHERE username = 'admin';
 
 -- 插入测试地址
 INSERT INTO address (user_id, name, phone, address, is_default) VALUES

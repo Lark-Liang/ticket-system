@@ -16,14 +16,27 @@ public class AuthService {
     @Autowired
     private UserMapper userMapper;
 
+    //用户名登录
     public User login(String username, String password) {
         //根据用户名查询当前用户是否存在
         User user = userMapper.findByUsername(username);
-        //简单密码验证（这里先用临时设定的简单明文密码，实际应该用BCrypt加密？）
+        //简单密码验证
+        // TODO：这里先用临时设定的简单明文密码，实际应该用BCrypt加密
         if (user != null && "123456".equals(password)) {
             return user;
         }
+        return null;
+    }
 
+    //邮箱登录
+    public User loginByEmail(String email, String password) {
+        //根据邮箱查询用户
+        User user = userMapper.findByEmail(email);
+
+        //验证密码
+        if (user != null && "123456".equals(password)) {
+            return user;
+        }
         return null;
     }
 }

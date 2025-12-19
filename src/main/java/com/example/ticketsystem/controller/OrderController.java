@@ -64,18 +64,10 @@ public class OrderController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        //调试日志
-        //TODO：后续有时间的话可以换成slf4j日志
-        System.out.println("=== 订单列表查询 ===");
-        System.out.println("参数: status=" + status + ", page=" + page + ", size=" + size);
-
         Long userId = extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
-
-        //调试日志
-        System.out.println("用户ID: " + userId);
 
         //计算分页
         if (page < 1) page = 1;
@@ -85,9 +77,6 @@ public class OrderController {
         //查询订单
         List<Order> orders = orderMapper.findByUserId(userId, status, offset, size);
         int total = orderMapper.countByUserId(userId, status);
-
-        //调试日志
-        System.out.println("查询到 " + orders.size() + " 条订单，总数: " + total);
 
         //构建响应
         Map<String, Object> result = new HashMap<>();
@@ -113,10 +102,6 @@ public class OrderController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id) {
 
-        //调试日志
-        System.out.println("=== 订单详情查询 ===");
-        System.out.println("订单ID: " + id);
-
         Long userId = extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
@@ -127,8 +112,6 @@ public class OrderController {
         if (order == null) {
             return ApiResponse.error(404, "订单不存在");
         }
-
-        System.out.println("订单用户ID: " + order.getUserId() + ", 当前用户ID: " + userId);
 
         //检查权限（只能查看自己的订单）
         if (!order.getUserId().equals(userId)) {
@@ -151,10 +134,6 @@ public class OrderController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id) {
 
-        //调试日志
-        System.out.println("=== 取消订单 ===");
-        System.out.println("订单ID: " + id);
-
         Long userId = extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
@@ -176,9 +155,6 @@ public class OrderController {
             return ApiResponse.error(400, "只能取消待支付订单，当前状态: " + order.getStatus());
         }
 
-        //调试日志
-        System.out.println("符合取消条件，执行取消...");
-
         //更新订单状态为cancelled
         int updateRows = orderMapper.updateStatus(id, "cancelled");
         if (updateRows == 0) {
@@ -187,8 +163,6 @@ public class OrderController {
 
         //恢复库存
         // TODO: 这里需要调用TicketTierMapper恢复库存
-
-        System.out.println("✅ 订单取消成功，订单ID: " + id);
 
         return ApiResponse.success("取消成功");
     }
