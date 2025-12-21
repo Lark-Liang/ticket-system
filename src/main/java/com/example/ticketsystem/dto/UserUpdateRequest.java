@@ -11,7 +11,7 @@ public class UserUpdateRequest {
     private String email;
     private String avatar;
 
-    // Getter和Setter
+    //Getter和Setter
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
 

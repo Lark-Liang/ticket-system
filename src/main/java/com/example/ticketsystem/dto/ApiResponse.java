@@ -3,6 +3,11 @@ package com.example.ticketsystem.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * @author Lark
+ * @ date 2025/12/12  16:36
+ * @ description ApiRequest
+ */
 @Data
 @AllArgsConstructor
 public class ApiResponse<T> {

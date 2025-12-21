@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @author Lark
  * @ date 2025/12/12  16:36
- * @ description
+ * @ description 地址Request
  */
 @Data
 public class AddressRequest {

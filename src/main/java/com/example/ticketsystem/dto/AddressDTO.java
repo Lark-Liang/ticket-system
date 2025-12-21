@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 /**
  * @author Lark
  * @ date 2025/12/12  16:33
- * @ description
+ * @ description 地址DTO
  */
 public class AddressDTO {
     private Long id;

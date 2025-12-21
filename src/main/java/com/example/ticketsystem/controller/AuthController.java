@@ -1,20 +1,21 @@
 package com.example.ticketsystem.controller;
 
 import com.example.ticketsystem.dto.ApiResponse;
-import com.example.ticketsystem.dto.LoginRequest;
+import com.example.ticketsystem.dto.AuthRequest;
 import com.example.ticketsystem.dto.EmailLoginRequest;
 import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Lark
  * @ date 2025/12/11  20:55
- * @ description：认证模块（用户名/邮箱登录接口，退出接口等），负责身份验证
+ * @ description 认证模块（用户名/邮箱登录接口，退出接口等），负责身份验证
  */
 
 @RestController
@@ -23,36 +24,59 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    /**用户名登录接口
+    /**登录/注册接口
      * POST /auth/login
      * Body (application/json)
-     * {
-     *     "username":"string",
-     *     "password":"string"
-     * }
+     * - username: 用户名(必填)
+     * - password: 密码(必填)
+     * - email: 邮箱(注册时可选)
+     * - nickname: 昵称(注册时可选)
+     * - phone: 手机号(注册时可选)
      */
     @PostMapping("/login")
-    public ApiResponse<Object> login(@RequestBody LoginRequest request) {
-        //调用Service登录
-        User user = authService.login(request.getUsername(), request.getPassword());
-        if (user == null) {
-            return ApiResponse.error(401, "用户名或密码错误");
+    public ApiResponse<?> auth(@RequestBody AuthRequest request) {
+        try {
+            //基本验证
+            if (!request.isValidForLogin()) {
+                return ApiResponse.error(400, "用户名和密码不能为空");
+            }
+
+            //调用统一的认证服务
+            User user = authService.auth(request);
+
+            //生成Token
+            Map<String, Object> data = new HashMap<>();
+            String token = "user_" + user.getId() + "_" + System.currentTimeMillis();
+
+            //构建响应数据
+            data.put("token", token);
+            data.put("userId", user.getId());
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("nickname", user.getNickname());
+            data.put("phone", user.getPhone());
+            data.put("role", user.getRole());
+
+            //判断是登录还是注册
+            boolean isNewUser = false;
+            if (user.getCreatedAt() != null) {
+                //如果创建时间与当前时间相差很小，认为是新用户
+                long createTimeMillis = user.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long currentTimeMillis = System.currentTimeMillis();
+                isNewUser = (currentTimeMillis - createTimeMillis) < 10000;   //10秒内
+            }
+
+            String message = isNewUser ? "注册并登录成功" : "登录成功";
+            data.put("isNewUser", isNewUser);   //告诉前端是否是注册
+
+            return ApiResponse.success(message, data);
+
+        } catch (RuntimeException e) {
+            return ApiResponse.error(400, e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.error(500, "系统错误，请稍后重试");
         }
-        //检查用户状态
-        // TODO：管理端还要完善启用/禁用用户的相关代码
-        if (user.getStatus() != null && user.getStatus() == 0) {
-            return ApiResponse.error(403, "用户已被禁用");
-        }
-        //返回token
-        // TODO：先用这个假token，后续再改用JWT升级
-        String token = "user_" + user.getId() + "_" + System.currentTimeMillis();
-        Map<String, Object> data = new HashMap<>();
-        data.put("token", token);
-        data.put("userId", user.getId());
-        data.put("username", user.getUsername());
-        data.put("role", user.getRole());
-        data.put("nickname", user.getNickname());
-        return ApiResponse.success("登录成功", data);
     }
 
     /**

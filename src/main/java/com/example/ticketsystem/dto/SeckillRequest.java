@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class SeckillRequest {
-    private Long sessionId;   // 场次ID
-    private Long ticketTierId;   // 票档ID
-    private Integer quantity;   // 购买数量（默认为1）
+    private Long sessionId;   //场次ID
+    private Long ticketTierId;   //票档ID
+    private Integer quantity;   //购买数量（默认为1）
 }

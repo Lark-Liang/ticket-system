@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author Lark
  * @ date 2025/12/12  20:14
- * @ description: 演出模块，含首页演出列表接口、搜索演出接口、条件查询演出接口、获取演出详情接口、抢票接口及提供给前端的辅助接口
+ * @ description 演出模块，含首页演出列表接口、搜索演出接口、条件查询演出接口、获取演出详情接口、抢票接口及提供给前端的辅助接口
  */
 @RestController
 @RequestMapping("/shows")

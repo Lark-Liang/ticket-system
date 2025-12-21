@@ -1,3 +1,17 @@
+CREATE TABLE IF NOT EXISTS USERS (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100),
+    nickname VARCHAR(50),
+    phone VARCHAR(20),
+    avatar VARCHAR(500),
+    status INT DEFAULT 1,
+    role VARCHAR(20) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+
 -- 插入测试用户（密码都是123456）
 INSERT INTO users (username, password, nickname, phone, email, role) VALUES
     ('testuser', '123456', '测试用户', '13800138000', 'test@example.com', 'user'),

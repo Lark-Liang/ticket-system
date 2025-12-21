@@ -13,15 +13,15 @@ import java.util.List;
 @Mapper
 public interface ShowMapper {
 
-    // 1. 首页推荐：按城市和状态查询，按开售时间倒序
+    //首页推荐：按城市和状态查询，按开售时间倒序
     @Select("SELECT * FROM show_info WHERE status = 1 AND city = #{city} ORDER BY sale_start_time DESC LIMIT #{limit}")
     List<Show> findHomeShows(@Param("city") String city, @Param("limit") int limit);
 
-    // 2. 搜索演出：按标题或描述模糊匹配
+    //搜索演出：按标题或描述模糊匹配
     @Select("SELECT * FROM show_info WHERE status = 1 AND (title LIKE CONCAT('%', #{keyword}, '%') OR description LIKE CONCAT('%', #{keyword}, '%'))")
     List<Show> searchByKeyword(@Param("keyword") String keyword);
 
-    // 3. 条件查询：城市、分类、分页
+    //条件查询：城市、分类、分页
     @Select({
             "<script>",
             "SELECT * FROM show_info WHERE status = 1",
@@ -36,7 +36,7 @@ public interface ShowMapper {
                                 @Param("offset") int offset,
                                 @Param("pageSize") int pageSize);
 
-    // 3.1 条件查询总数（用于分页）
+    //条件查询总数（用于分页）
     @Select({
             "<script>",
             "SELECT COUNT(*) FROM show_info WHERE status = 1",
@@ -46,19 +46,19 @@ public interface ShowMapper {
     })
     int countByConditions(@Param("city") String city, @Param("category") String category);
 
-    // 4. 根据ID查询演出详情
+    //根据ID查询演出详情
     @Select("SELECT * FROM show_info WHERE id = #{id}")
     Show findById(@Param("id") Long id);
 
-    // 5. 更新库存（抢票用）
+    //更新库存（抢票用）
     @Update("UPDATE show_info SET available_stock = available_stock - #{quantity}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id} AND available_stock >= #{quantity}")
     int reduceStock(@Param("id") Long id, @Param("quantity") Integer quantity);
 
-    // 6. 查询所有城市（用于前端筛选）
+    //查询所有城市（用于前端筛选）
     @Select("SELECT DISTINCT city FROM show_info WHERE status = 1 ORDER BY city")
     List<String> findAllCities();
 
-    // 7. 查询所有分类（用于前端筛选）
+    //查询所有分类（用于前端筛选）
     @Select("SELECT DISTINCT category FROM show_info WHERE status = 1 ORDER BY category")
     List<String> findAllCategories();
 }

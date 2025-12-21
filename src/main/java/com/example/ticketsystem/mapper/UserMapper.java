@@ -1,7 +1,9 @@
 package com.example.ticketsystem.mapper;
 
 import com.example.ticketsystem.entity.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -20,4 +22,10 @@ public interface UserMapper {
     //根据邮箱查询用户
     @Select("SELECT * FROM USERS WHERE email = #{email}")
     User findByEmail(String email);
+
+    //插入用户
+    @Insert("INSERT INTO USERS (username, password, email, nickname, phone, role, status) " +
+            "VALUES (#{username}, #{password}, #{email}, #{nickname}, #{phone}, #{role}, #{status})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insert(User user);
 }
