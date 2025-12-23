@@ -51,7 +51,7 @@ public interface OrderMapper {
                       @Param("status") String status);
 
     //更新订单状态
-    @Update("UPDATE `order` SET status = #{status}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}")
+    @Update("UPDATE `order` SET status = #{status}, updated_at = NOW() WHERE id = #{id}")
     int updateStatus(@Param("id") Long id, @Param("status") String status);
 
 }

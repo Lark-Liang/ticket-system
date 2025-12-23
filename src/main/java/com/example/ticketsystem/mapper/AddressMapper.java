@@ -29,7 +29,7 @@ public interface AddressMapper {
 
     //更新地址
     @Update("UPDATE address SET name=#{name}, phone=#{phone}, address=#{address}, " +
-            "is_default=#{isDefault}, updated_at=CURRENT_TIMESTAMP WHERE id=#{id}")
+            "is_default=#{isDefault}, updated_at=NOW() WHERE id=#{id}")
     int update(Address address);
 
     //删除地址

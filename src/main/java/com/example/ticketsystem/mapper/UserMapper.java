@@ -20,11 +20,11 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE id = #{id}")
     User findById(Long id);
     //根据邮箱查询用户
-    @Select("SELECT * FROM USERS WHERE email = #{email}")
+    @Select("SELECT * FROM users WHERE email = #{email}")
     User findByEmail(String email);
 
     //插入用户
-    @Insert("INSERT INTO USERS (username, password, email, nickname, phone, role, status) " +
+    @Insert("INSERT INTO users (username, password, email, nickname, phone, role, status) " +
             "VALUES (#{username}, #{password}, #{email}, #{nickname}, #{phone}, #{role}, #{status})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(User user);
