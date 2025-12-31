@@ -3,8 +3,12 @@ package com.example.ticketsystem.controller;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.dto.AuthRequest;
 import com.example.ticketsystem.dto.EmailLoginRequest;
+import com.example.ticketsystem.dto.TokenResponse;
 import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.service.AuthService;
+import com.example.ticketsystem.util.JwtUtil;
+import com.example.ticketsystem.util.TokenUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +27,12 @@ import java.util.Map;
 public class AuthController {
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
     /**登录/注册接口
      * POST /auth/login
@@ -44,18 +54,19 @@ public class AuthController {
             //调用统一的认证服务
             User user = authService.auth(request);
 
-            //生成Token
-            Map<String, Object> data = new HashMap<>();
-            String token = "user_" + user.getId() + "_" + System.currentTimeMillis();
+            //生成JWT Token
+            String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
+            String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
 
             //构建响应数据
-            data.put("token", token);
-            data.put("userId", user.getId());
-            data.put("username", user.getUsername());
-            data.put("email", user.getEmail());
-            data.put("nickname", user.getNickname());
-            data.put("phone", user.getPhone());
-            data.put("role", user.getRole());
+            TokenResponse tokenResponse = new TokenResponse(
+                    accessToken,
+                    refreshToken,
+                    jwtUtil.getRemainingTime(accessToken),
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole()
+            );
 
             //判断是登录还是注册
             boolean isNewUser = false;
@@ -66,9 +77,11 @@ public class AuthController {
                 isNewUser = (currentTimeMillis - createTimeMillis) < 10000;   //10秒内
             }
 
-            String message = isNewUser ? "注册并登录成功" : "登录成功";
-            data.put("isNewUser", isNewUser);   //告诉前端是否是注册
+            Map<String, Object> data = new HashMap<>();
+            data.put("token", tokenResponse);
+            data.put("isNewUser", isNewUser);
 
+            String message = isNewUser ? "注册并登录成功" : "登录成功";
             return ApiResponse.success(message, data);
 
         } catch (RuntimeException e) {
@@ -113,11 +126,21 @@ public class AuthController {
             return ApiResponse.error(403, "用户已被禁用");
         }
 
-        //生成Token
-        Map<String, Object> data = new HashMap<>();
-        String token = "user_" + user.getId() + "_" + System.currentTimeMillis();
+        //生成JWT Token
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
 
-        data.put("token", token);
+        TokenResponse tokenResponse = new TokenResponse(
+                accessToken,
+                refreshToken,
+                jwtUtil.getRemainingTime(accessToken),
+                user.getId(),
+                user.getUsername(),
+                user.getRole()
+        );
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", tokenResponse);
         data.put("userId", user.getId());
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
@@ -142,5 +165,63 @@ public class AuthController {
         // TODO: 后续这里应该：将Token加入黑名单（Redis）、清除用户会话、记录日志
 
         return ApiResponse.success("退出成功");
+    }
+
+    /**
+     * 刷新Access Token接口
+     * POST /auth/refresh
+     * Headers:
+     *  - Authorization: Bearer {refreshToken}
+     */
+    @PostMapping("/refresh")
+    public ApiResponse<?> refreshToken(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = tokenUtil.extractTokenFromHeader(authHeader);
+            if (token == null) {
+                return ApiResponse.error(401, "未提供Token");
+            }
+
+            //验证Token
+            if (!jwtUtil.validateToken(token)) {
+                return ApiResponse.error(401, "Token无效或已过期");
+            }
+
+            //获取Claims
+            Claims claims = tokenUtil.getClaimsFromToken(authHeader);
+            if (claims == null) {
+                return ApiResponse.error(401, "无法解析Token");
+            }
+
+            //检查是否为Refresh Token
+            String tokenType = (String) claims.get("type");
+            if (!"refresh".equals(tokenType)) {
+                return ApiResponse.error(400, "请使用Refresh Token");
+            }
+
+            //获取用户信息
+            Long userId = jwtUtil.getUserIdFromToken(token);
+            String username = jwtUtil.getUsernameFromToken(token);
+
+            if (userId == null || username == null) {
+                return ApiResponse.error(400, "Token中缺少用户信息");
+            }
+
+            //生成新的Access Token（假设角色为user，可以根据需要从数据库查询）
+            String newAccessToken = jwtUtil.generateAccessToken(userId, username, "user");
+
+            TokenResponse tokenResponse = TokenResponse.of(
+                    newAccessToken,
+                    jwtUtil.getRemainingTime(newAccessToken),
+                    userId,
+                    username,
+                    "user"
+            );
+
+            return ApiResponse.success("Token刷新成功", tokenResponse);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.error(500, "Token刷新失败: " + e.getMessage());
+        }
     }
 }

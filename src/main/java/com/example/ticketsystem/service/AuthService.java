@@ -39,7 +39,7 @@ public class AuthService {
     public User login(User user, String password) {
         //简单密码验证
         // TODO：这里先用临时设定的简单明文密码，后续可用BCrypt加密
-        if (user != null && "123456".equals(password)) {
+        if (user != null && user.getPassword() != null && user.getPassword().equals(password)) {
             //检查用户状态
             if (user.getStatus() != null && user.getStatus() == 0) {
                 throw new RuntimeException("用户已被禁用");
@@ -90,7 +90,7 @@ public class AuthService {
         User user = userMapper.findByEmail(email);
 
         //验证密码
-        if (user != null && "123456".equals(password)) {
+        if (user != null && user.getPassword() != null && user.getPassword().equals(password)) {
             return user;
         }
         return null;

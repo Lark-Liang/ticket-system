@@ -1,0 +1,228 @@
+2025-12-31T08:19:56.581+08:00  WARN 8920 --- [ticket-system] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10h54m45s573ms11µs).
+2025-12-31T08:27:43.758+08:00  INFO 8920 --- [ticket-system] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-31T08:27:43.780+08:00  INFO 8920 --- [ticket-system] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2025-12-31T08:27:43.789+08:00  INFO 8920 --- [ticket-system] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-31T08:27:43.820+08:00  INFO 8920 --- [ticket-system] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-12-31T08:27:51.885+08:00  INFO 13224 --- [ticket-system] [main] c.e.t.TicketSystemApplication            : Starting TicketSystemApplication using Java 24.0.2 with PID 13224 (C:\Users\lark\IdeaProjects\ticket-system\target\classes started by lark in C:\Users\lark\IdeaProjects\ticket-system)
+2025-12-31T08:27:51.894+08:00 DEBUG 13224 --- [ticket-system] [main] c.e.t.TicketSystemApplication            : Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-31T08:27:51.894+08:00  INFO 13224 --- [ticket-system] [main] c.e.t.TicketSystemApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-12-31T08:27:53.477+08:00  INFO 13224 --- [ticket-system] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2025-12-31T08:27:53.500+08:00  INFO 13224 --- [ticket-system] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-31T08:27:53.501+08:00  INFO 13224 --- [ticket-system] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.14]
+2025-12-31T08:27:53.603+08:00  INFO 13224 --- [ticket-system] [main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1623 ms
+2025-12-31T08:27:53.928+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.DataSourceUtils      : Fetching JDBC Connection from DataSource
+2025-12-31T08:27:53.929+08:00  INFO 13224 --- [ticket-system] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-31T08:27:54.243+08:00  INFO 13224 --- [ticket-system] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62c3f556
+2025-12-31T08:27:54.247+08:00  INFO 13224 --- [ticket-system] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-31T08:27:54.253+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : Executing SQL script from class path resource [schema.sql]
+2025-12-31T08:27:54.891+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : SQLWarning ignored: SQL state '42S01', error code '1050', message [Table 'users' already exists]
+2025-12-31T08:27:54.892+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 0 returned as update count for SQL: CREATE TABLE IF NOT EXISTS `users` ( `id` BIGINT AUTO_INCREMENT PRIMARY KEY, `username` VARCHAR(50) NOT NULL UNIQUE, `password` VARCHAR(255) NOT NULL, `nickname` VARCHAR(50), `phone` VARCHAR(20), `email` VARCHAR(100), `avatar` VARCHAR(500), `status` INT DEFAULT 1, `role` VARCHAR(20) DEFAULT 'user', `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+2025-12-31T08:27:54.924+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : SQLWarning ignored: SQL state '42S01', error code '1050', message [Table 'address' already exists]
+2025-12-31T08:27:54.925+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 0 returned as update count for SQL: CREATE TABLE IF NOT EXISTS `address` ( `id` BIGINT AUTO_INCREMENT PRIMARY KEY, `user_id` BIGINT NOT NULL, `name` VARCHAR(50) NOT NULL, `phone` VARCHAR(20) NOT NULL, `address` VARCHAR(500) NOT NULL, `is_default` INT DEFAULT 0, `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX `idx_user_id` (`user_id`) )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+2025-12-31T08:27:54.931+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : SQLWarning ignored: SQL state '42S01', error code '1050', message [Table 'show_info' already exists]
+2025-12-31T08:27:54.931+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 0 returned as update count for SQL: CREATE TABLE IF NOT EXISTS `show_info` ( `id` BIGINT AUTO_INCREMENT PRIMARY KEY, `title` VARCHAR(200) NOT NULL, `description` TEXT, `category` VARCHAR(50), `city` VARCHAR(50), `venue` VARCHAR(200), `cover_image` VARCHAR(500), `start_time` TIMESTAMP, `end_time` TIMESTAMP, `min_price` DECIMAL(10, 2), `max_price` DECIMAL(10, 2), `status` INT DEFAULT 1, `total_stock` INT DEFAULT 0, `available_stock` INT DEFAULT 0, `sale_start_time` TIMESTAMP, `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX `idx_city` (`city`), INDEX `idx_category` (`category`), INDEX `idx_status` (`status`), INDEX `idx_sale_time` (`sale_start_time`) )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+2025-12-31T08:27:54.936+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : SQLWarning ignored: SQL state '42S01', error code '1050', message [Table 'show_session' already exists]
+2025-12-31T08:27:54.936+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 0 returned as update count for SQL: CREATE TABLE IF NOT EXISTS `show_session` ( `id` BIGINT AUTO_INCREMENT PRIMARY KEY, `show_id` BIGINT NOT NULL, `session_time` TIMESTAMP NOT NULL, `status` INT DEFAULT 1, `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX `idx_show_id` (`show_id`) )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+2025-12-31T08:27:54.940+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : SQLWarning ignored: SQL state '42S01', error code '1050', message [Table 'ticket_tier' already exists]
+2025-12-31T08:27:54.940+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 0 returned as update count for SQL: CREATE TABLE IF NOT EXISTS `ticket_tier` ( `id` BIGINT AUTO_INCREMENT PRIMARY KEY, `show_id` BIGINT NOT NULL, `name` VARCHAR(50) NOT NULL, `description` VARCHAR(200), `price` DECIMAL(10, 2) NOT NULL, `total_stock` INT NOT NULL, `available_stock` INT NOT NULL, `version` INT DEFAULT 0, `status` INT DEFAULT 1, `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX `idx_show_id` (`show_id`) )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+2025-12-31T08:27:54.946+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : SQLWarning ignored: SQL state '42S01', error code '1050', message [Table 'order' already exists]
+2025-12-31T08:27:54.946+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 0 returned as update count for SQL: CREATE TABLE IF NOT EXISTS `order` ( `id` BIGINT AUTO_INCREMENT PRIMARY KEY, `order_no` VARCHAR(50) NOT NULL UNIQUE, `user_id` BIGINT NOT NULL, `show_id` BIGINT NOT NULL, `session_id` BIGINT NOT NULL, `ticket_tier_id` BIGINT NOT NULL, `quantity` INT NOT NULL, `unit_price` DECIMAL(10, 2) NOT NULL, `total_amount` DECIMAL(10, 2) NOT NULL, `status` VARCHAR(20) DEFAULT 'pending', `address_id` BIGINT, `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX `idx_user_id` (`user_id`), INDEX `idx_show_id` (`show_id`) )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+2025-12-31T08:27:54.946+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : Executed SQL script from class path resource [schema.sql] in 693 ms.
+2025-12-31T08:27:54.954+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.DataSourceUtils      : Fetching JDBC Connection from DataSource
+2025-12-31T08:27:54.955+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : Executing SQL script from class path resource [data.sql]
+2025-12-31T08:27:54.970+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : Failed to execute SQL script statement #1 of class path resource [data.sql]: INSERT INTO users (username, password, nickname, phone, email, role,status) VALUES ('testuser', '123456', '测试用户', '13800138000', 'test@example.com', 'user',1), ('admin', '123456', '管理员', '13900139000', 'admin@example.com', 'admin',1)
+
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'testuser' for key 'users.username'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:837) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:685) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-7.0.2.jar:na]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:261) ~[spring-jdbc-7.0.1.jar:7.0.1]
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254) ~[spring-jdbc-7.0.1.jar:7.0.1]
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54) ~[spring-jdbc-7.0.1.jar:7.0.1]
+	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87) ~[spring-boot-jdbc-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:159) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:120) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:113) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:88) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:77) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:229) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1762) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1651) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1528) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1437) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveBean(DefaultListableBeanFactory.java:1225) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1704) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1651) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:763) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:747) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:492) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1446) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveBean(DefaultListableBeanFactory.java:1225) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1704) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1651) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:763) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:747) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:492) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1446) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1218) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1184) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:983) ~[spring-context-7.0.1.jar:7.0.1]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:620) ~[spring-context-7.0.1.jar:7.0.1]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:454) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-4.0.0.jar:4.0.0]
+	at com.example.ticketsystem.TicketSystemApplication.main(TicketSystemApplication.java:13) ~[classes/:na]
+
+2025-12-31T08:27:54.983+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 2 returned as update count for SQL: INSERT INTO address (user_id, name, phone, address, is_default) VALUES (1, '张三', '13800138000', '北京市海淀区中关村大街1号', 1), (1, '李四', '13800138001', '上海市浦东新区陆家嘴', 0)
+2025-12-31T08:27:54.991+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 3 returned as update count for SQL: INSERT INTO show_info (title, description, category, city, venue, cover_image,start_time, end_time, min_price, max_price, total_stock, available_stock, sale_start_time, status) VALUES ('周杰伦「嘉年华」世界巡回演唱会-北京站', '华语天王周杰伦全新巡演，豪华舞台、经典曲目全回顾。', 'concert', '北京', '国家体育场（鸟巢）', '/images/jay.jpg', '2024-06-20 19:30:00', '2024-06-20 22:30:00', 580.00, 2580.00, 10000, 10000, '2024-05-01 10:00:00', 1), ('话剧《茶馆》- 北京人民艺术剧院', '老舍经典话剧，中国话剧史上的瑰宝。', 'drama', '北京', '首都剧场', '/images/teahouse.jpg', '2024-07-15 19:00:00', '2024-07-15 21:30:00', 180.00, 880.00, 500, 500, '2024-06-01 10:00:00', 1), ('Taylor Swift | The Eras Tour - 上海站', '全球现象级巡演，史上最畅销女歌手震撼登场。', 'concert', '上海', '上海体育场', '/images/taylor.jpg', '2024-08-10 20:00:00', '2024-08-10 23:00:00', 880.00, 3880.00, 8000, 8000, '2024-07-01 10:00:00', 1)
+2025-12-31T08:27:55.001+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 1 returned as update count for SQL: INSERT IGNORE INTO show_session (show_id, session_time, status) SELECT id, '2024-06-20 19:30:00', 1 FROM show_info WHERE title = '周杰伦「嘉年华」世界巡回演唱会-北京站'
+2025-12-31T08:27:55.006+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 1 returned as update count for SQL: INSERT IGNORE INTO show_session (show_id, session_time, status) SELECT id, '2024-06-21 19:30:00', 1 FROM show_info WHERE title = '周杰伦「嘉年华」世界巡回演唱会-北京站'
+2025-12-31T08:27:55.016+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 1 returned as update count for SQL: INSERT INTO ticket_tier (show_id, name, description, price, total_stock, available_stock, status) SELECT id, 'VIP票', '前区最佳观赏位置', 2580.00, 1000, 1000, 1 FROM show_info WHERE title = '周杰伦「嘉年华」世界巡回演唱会-北京站'
+2025-12-31T08:27:55.023+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 1 returned as update count for SQL: INSERT IGNORE INTO ticket_tier (show_id, name, description, price, total_stock, available_stock, status) SELECT id, '普通票', '看台区域', 580.00, 9000, 9000, 1 FROM show_info WHERE title = '周杰伦「嘉年华」世界巡回演唱会-北京站'
+2025-12-31T08:27:55.028+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : 1 returned as update count for SQL: INSERT IGNORE INTO ticket_tier (show_id, name, description, price, total_stock, available_stock, status) SELECT id, '学生票', '凭学生证购买', 380.00, 2000, 2000, 1 FROM show_info WHERE title = '周杰伦「嘉年华」世界巡回演唱会-北京站'
+2025-12-31T08:27:55.032+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : Failed to execute SQL script statement #9 of class path resource [data.sql]: INSERT INTO `order` (order_no, user_id, show_id, session_id, ticket_tier_id, quantity, unit_price, total_amount, status, created_at) VALUES ('ORDER202412130001', 1, 1, 1, 1, 2, 2580.00, 5160.00, 'pending', '2024-12-13 09:00:00'), ('ORDER202412130002', 1, 1, 1, 2, 1, 580.00, 580.00, 'paid', '2024-12-13 10:00:00')
+
+java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'ORDER202412130001' for key 'order.order_no'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:109) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:837) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:685) ~[mysql-connector-j-9.5.0.jar:9.5.0]
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java) ~[HikariCP-7.0.2.jar:na]
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:261) ~[spring-jdbc-7.0.1.jar:7.0.1]
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254) ~[spring-jdbc-7.0.1.jar:7.0.1]
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54) ~[spring-jdbc-7.0.1.jar:7.0.1]
+	at org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer.runScripts(DataSourceScriptDatabaseInitializer.java:87) ~[spring-boot-jdbc-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.runScripts(AbstractScriptDatabaseInitializer.java:159) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyScripts(AbstractScriptDatabaseInitializer.java:120) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.applyDataScripts(AbstractScriptDatabaseInitializer.java:113) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.initializeDatabase(AbstractScriptDatabaseInitializer.java:88) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer.afterPropertiesSet(AbstractScriptDatabaseInitializer.java:77) ~[spring-boot-sql-4.0.0.jar:4.0.0]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1864) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1813) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:603) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:309) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:229) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1762) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1651) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1528) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1437) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveBean(DefaultListableBeanFactory.java:1225) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1704) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1651) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:763) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:747) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:492) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1446) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:201) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveBean(DefaultListableBeanFactory.java:1225) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1704) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1651) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:763) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:747) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:492) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1446) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:602) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:525) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:333) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:371) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:331) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:196) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1218) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1184) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1121) ~[spring-beans-7.0.1.jar:7.0.1]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:983) ~[spring-context-7.0.1.jar:7.0.1]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:620) ~[spring-context-7.0.1.jar:7.0.1]
+	at org.springframework.boot.web.server.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:143) ~[spring-boot-web-server-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:765) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:454) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:321) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374) ~[spring-boot-4.0.0.jar:4.0.0]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-4.0.0.jar:4.0.0]
+	at com.example.ticketsystem.TicketSystemApplication.main(TicketSystemApplication.java:13) ~[classes/:na]
+
+2025-12-31T08:27:55.053+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : ResultSet returned for SQL: SELECT '数据库数据插入完成!' AS message
+2025-12-31T08:27:55.054+08:00 DEBUG 13224 --- [ticket-system] [main] o.s.jdbc.datasource.init.ScriptUtils     : Executed SQL script from class path resource [data.sql] in 99 ms.
+2025-12-31T08:27:55.985+08:00  INFO 13224 --- [ticket-system] [main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2025-12-31T08:27:56.001+08:00  INFO 13224 --- [ticket-system] [main] c.e.t.TicketSystemApplication            : Started TicketSystemApplication in 4.808 seconds (process running for 5.785)
+2025-12-31T08:28:16.368+08:00  INFO 13224 --- [ticket-system] [http-nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-31T08:28:16.369+08:00  INFO 13224 --- [ticket-system] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-12-31T08:28:16.371+08:00  INFO 13224 --- [ticket-system] [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-12-31T08:28:16.636+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] o.s.jdbc.datasource.DataSourceUtils      : Fetching JDBC Connection from DataSource
+2025-12-31T08:28:16.642+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findByUsername   : ==>  Preparing: SELECT * FROM users WHERE username = ?
+2025-12-31T08:28:16.675+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findByUsername   : ==> Parameters: string(String)
+2025-12-31T08:28:16.703+08:00 TRACE 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findByUsername   : <==    Columns: id, username, password, nickname, phone, email, avatar, status, role, created_at, updated_at
+2025-12-31T08:28:16.706+08:00 TRACE 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findByUsername   : <==        Row: 5, string, string, string, string, string, null, 1, user, 2025-12-30 20:37:08, 2025-12-30 20:37:08
+2025-12-31T08:28:16.718+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findByUsername   : <==      Total: 1
+2025-12-31T08:30:17.366+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-4] o.s.jdbc.datasource.DataSourceUtils      : Fetching JDBC Connection from DataSource
+2025-12-31T08:30:17.369+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-4] c.e.t.mapper.UserMapper.findByUsername   : ==>  Preparing: SELECT * FROM users WHERE username = ?
+2025-12-31T08:30:17.372+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-4] c.e.t.mapper.UserMapper.findByUsername   : ==> Parameters: string(String)
+2025-12-31T08:30:17.375+08:00 TRACE 13224 --- [ticket-system] [http-nio-8080-exec-4] c.e.t.mapper.UserMapper.findByUsername   : <==    Columns: id, username, password, nickname, phone, email, avatar, status, role, created_at, updated_at
+2025-12-31T08:30:17.376+08:00 TRACE 13224 --- [ticket-system] [http-nio-8080-exec-4] c.e.t.mapper.UserMapper.findByUsername   : <==        Row: 5, string, string, string, string, string, null, 1, user, 2025-12-30 20:37:08, 2025-12-30 20:37:08
+2025-12-31T08:30:17.378+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-4] c.e.t.mapper.UserMapper.findByUsername   : <==      Total: 1
+2025-12-31T08:34:06.355+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] o.s.jdbc.datasource.DataSourceUtils      : Fetching JDBC Connection from DataSource
+2025-12-31T08:34:06.357+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findById         : ==>  Preparing: SELECT * FROM users WHERE id = ?
+2025-12-31T08:34:06.364+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findById         : ==> Parameters: 5(Long)
+2025-12-31T08:34:06.394+08:00 TRACE 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findById         : <==    Columns: id, username, password, nickname, phone, email, avatar, status, role, created_at, updated_at
+2025-12-31T08:34:06.395+08:00 TRACE 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findById         : <==        Row: 5, string, string, string, string, string, null, 1, user, 2025-12-30 20:37:08, 2025-12-30 20:37:08
+2025-12-31T08:34:06.397+08:00 DEBUG 13224 --- [ticket-system] [http-nio-8080-exec-3] c.e.t.mapper.UserMapper.findById         : <==      Total: 1
+2025-12-31T08:35:54.038+08:00  INFO 13224 --- [ticket-system] [SpringApplicationShutdownHook] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2025-12-31T08:35:54.058+08:00  INFO 13224 --- [ticket-system] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2025-12-31T08:35:54.066+08:00  INFO 13224 --- [ticket-system] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-12-31T08:35:54.082+08:00  INFO 13224 --- [ticket-system] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

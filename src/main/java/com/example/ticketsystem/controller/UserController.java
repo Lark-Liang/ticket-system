@@ -5,6 +5,7 @@ import com.example.ticketsystem.entity.Address;
 import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.mapper.AddressMapper;
 import com.example.ticketsystem.mapper.UserMapper;
+import com.example.ticketsystem.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,33 +25,8 @@ public class UserController {
     private UserMapper userMapper;
     @Autowired
     private AddressMapper addressMapper;
-
-    //提取Token中的用户ID
-    private Long extractUserIdFromToken(String authHeader) {
-        //检查Authorization头
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null;
-        }
-        //提取token
-        String token = authHeader.substring(7).trim();
-        //解析token:"user_{userId}_{timestamp}"
-        if (token.startsWith("user_")) {
-            try {
-                //分割字符串：["user", "1", "1741812345678"]
-                String[] parts = token.split("_");
-                if (parts.length >= 2) {
-                    //第二部分就是userId
-                    return Long.parseLong(parts[1]);
-                }
-            } catch (NumberFormatException e) {
-                //如果第二部分不是数字，返回null
-                System.out.println("Token格式错误，无法解析userId: " + token);
-                return null;
-            }
-        }
-        System.out.println("无法识别的Token格式: " + token);
-        return null;
-    }
+    @Autowired
+    private TokenUtil tokenUtil;
 
     // ======== 用户信息相关接口 ========
 
@@ -61,7 +37,7 @@ public class UserController {
      */
     @GetMapping("/info")
     public ApiResponse<Object> getUserInfo(@RequestHeader("Authorization") String authHeader) {
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -85,7 +61,7 @@ public class UserController {
             @RequestHeader("Authorization") String authHeader,
             @RequestBody UserUpdateRequest request) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -126,7 +102,7 @@ public class UserController {
      */
     @GetMapping("/addresses")
     public ApiResponse<Object> getAddresses(@RequestHeader("Authorization") String authHeader) {
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -156,7 +132,7 @@ public class UserController {
             @RequestHeader("Authorization") String authHeader,
             @RequestBody AddressRequest request) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -204,7 +180,7 @@ public class UserController {
             @PathVariable Long id,
             @RequestBody AddressRequest request) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -253,7 +229,7 @@ public class UserController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }

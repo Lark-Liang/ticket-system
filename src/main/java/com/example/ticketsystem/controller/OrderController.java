@@ -5,6 +5,7 @@ import com.example.ticketsystem.entity.Order;
 import com.example.ticketsystem.mapper.OrderMapper;
 import com.example.ticketsystem.mapper.ShowMapper;
 import com.example.ticketsystem.mapper.TicketTierMapper;
+import com.example.ticketsystem.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,32 +23,12 @@ import java.util.Map;
 public class OrderController {
     @Autowired
     private OrderMapper orderMapper;
-
     @Autowired
     private ShowMapper showMapper;
-
     @Autowired
     private TicketTierMapper ticketTierMapper;
-
-    //提取Token中的用户ID（复用UserController的逻辑）
-    //TODO:后续创建一个TokenUtil工具类然后使用
-    private Long extractUserIdFromToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null;
-        }
-        String token = authHeader.substring(7).trim();
-        if (token.startsWith("user_")) {
-            try {
-                String[] parts = token.split("_");
-                if (parts.length >= 2) {
-                    return Long.parseLong(parts[1]);
-                }
-            } catch (NumberFormatException e) {
-                return null;
-            }
-        }
-        return null;
-    }
+    @Autowired
+    private TokenUtil tokenUtil;
 
     /**
      * 分页查询订单列表
@@ -64,7 +45,7 @@ public class OrderController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -102,7 +83,7 @@ public class OrderController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
@@ -134,7 +115,7 @@ public class OrderController {
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id) {
 
-        Long userId = extractUserIdFromToken(authHeader);
+        Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
             return ApiResponse.error(401, "未授权");
         }
