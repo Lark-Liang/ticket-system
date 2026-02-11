@@ -19,6 +19,7 @@ public class TokenUtil {
     private JwtProperties jwtProperties;
 
     //从Authorization Header中提取并验证Token，返回用户ID，如果无效则返回null
+    // TODO:工具类的方法是静态方法，直接调用
     public Long extractUserIdFromToken(String authHeader) {
         String token = extractTokenFromHeader(authHeader);
         if (token == null || !jwtUtil.validateToken(token)) {

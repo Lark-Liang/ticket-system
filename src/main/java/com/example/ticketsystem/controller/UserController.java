@@ -6,7 +6,9 @@ import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.mapper.AddressMapper;
 import com.example.ticketsystem.mapper.UserMapper;
 import com.example.ticketsystem.util.TokenUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +23,16 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    // TODO：controller应该是注入service层的方法，而不是直接使用mapper
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private AddressMapper addressMapper;
+    // TODO：工具类一般不需要注入，而是直接静态方法调用StringUtils.isEmpty()
     @Autowired
     private TokenUtil tokenUtil;
+
 
     // ======== 用户信息相关接口 ========
 
@@ -36,6 +42,7 @@ public class UserController {
      *  - Authorization: Bearer{token}
      */
     @GetMapping("/info")
+    // TODO:这里应该放在拦截器里面，不然每个方法都要验证一遍有没有token
     public ApiResponse<Object> getUserInfo(@RequestHeader("Authorization") String authHeader) {
         Long userId = tokenUtil.extractUserIdFromToken(authHeader);
         if (userId == null) {
@@ -57,6 +64,8 @@ public class UserController {
      *  - Authorization: Bearer {token}
      */
     @PutMapping("/info")
+    @Transactional
+    // TODO：对于数据库有增删改的操作都需要保证事务，加上注释@Transactional
     public ApiResponse<Object> updateUserInfo(
             @RequestHeader("Authorization") String authHeader,
             @RequestBody UserUpdateRequest request) {
@@ -71,6 +80,7 @@ public class UserController {
             return ApiResponse.error(404, "用户不存在");
         }
 
+        // TODO：以下部分应该要放在service里
         //更新字段（用户信息），只修改需要修改的部分
         // TODO：注意当前代码无法允许用户把字段设置为空，后续要改
         if (request.getNickname() != null) {
@@ -107,6 +117,7 @@ public class UserController {
             return ApiResponse.error(401, "未授权");
         }
 
+        // TODO：如果这里地址查出来是空，会报错空指针
         List<Address> addresses = addressMapper.findByUserId(userId);
         List<AddressDTO> addressDTOs = addresses.stream()
                 .map(AddressDTO::fromEntity)
@@ -175,6 +186,7 @@ public class UserController {
      * }
      */
     @PutMapping("/address/{id}")
+    // TODO：事务
     public ApiResponse<Object> updateAddress(
             @RequestHeader("Authorization") String authHeader,
             @PathVariable Long id,
@@ -205,6 +217,7 @@ public class UserController {
         }
 
         //更新字段
+        // TODO:BeanUtils.copyProperties(request, address);
         address.setName(request.getName());
         address.setPhone(request.getPhone());
         address.setAddress(request.getAddress());
