@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ticket_system_dev
+    username: dev_user
+    password: dev_password
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret-key: dev-jwt-secret-key-for-development-only-12345
+  access-token-expiration: 86400  # 开发环境：24小时
