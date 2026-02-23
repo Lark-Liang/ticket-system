@@ -1,6 +1,8 @@
 package com.example.ticketsystem.entity;
 
 import lombok.Data;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -14,6 +16,10 @@ public class User {
     private String username;
     private String password;
     private String nickname;
+    private String bio;
+    private Integer gender;
+    private LocalDate birthday;
+    private String backgroundImage;
     private String phone;
     private String email;
     private String avatar;
@@ -34,6 +40,18 @@ public class User {
 
     public String getNickname() { return nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public Integer getGender() { return gender; }
+    public void setGender(Integer gender) { this.gender = gender; }
+
+    public LocalDate getBirthday() { return birthday; }
+    public void setBirthday(LocalDate birthday) { this.birthday = birthday; }
+
+    public String getBackgroundImage() { return backgroundImage; }
+    public void setBackgroundImage(String backgroundImage) { this.backgroundImage = backgroundImage; }
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
@@ -63,6 +81,10 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='[PROTECTED]'" +
                 ", nickname='" + nickname + '\'' +
+                ", bio='" + bio + '\'' +
+                ", gender=" + gender +
+                ", birthday=" + birthday +
+                ", backgroundImage='" + backgroundImage + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", avatar='" + avatar + '\'' +

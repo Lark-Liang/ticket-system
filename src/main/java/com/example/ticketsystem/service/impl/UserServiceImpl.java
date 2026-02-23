@@ -54,6 +54,18 @@ public class UserServiceImpl implements UserService {
         if (request.getNickname() != null) {
             user.setNickname(request.getNickname());
         }
+        if (request.getBio() != null) {
+            user.setBio(request.getBio());
+        }
+        if (request.getGender() != null) {
+            user.setGender(request.getGender());
+        }
+        if (request.getBirthday() != null) {
+            user.setBirthday(request.getBirthday());
+        }
+        if (request.getBackgroundImage() != null) {
+            user.setBackgroundImage(request.getBackgroundImage());
+        }
         if (request.getPhone() != null) {
             user.setPhone(request.getPhone());
         }
@@ -64,8 +76,7 @@ public class UserServiceImpl implements UserService {
             user.setAvatar(request.getAvatar());
         }
 
-        // TODO: 执行数据库更新
-        // userMapper.update(user);
+        userMapper.update(user);
 
         return UserInfoDTO.fromUser(user);
     }

@@ -4,6 +4,10 @@ CREATE TABLE IF NOT EXISTS `users` (
     `username` VARCHAR(50) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `nickname` VARCHAR(50),
+    `bio` VARCHAR(200),
+    `gender` INT DEFAULT 0,   -- 性别：0-未知，1-女，2-男
+    `birthday` DATE,
+    `background_image` VARCHAR(500),
     `phone` VARCHAR(20),
     `email` VARCHAR(100),
     `avatar` VARCHAR(500),

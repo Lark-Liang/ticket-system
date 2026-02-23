@@ -1,14 +1,22 @@
 -- 插入测试用户（密码都是123456）
-INSERT INTO users (username, password, nickname, phone, email, role,status) VALUES
-    ('testuser', '123456', '测试用户', '13800138000', 'test@example.com', 'user',1),
-    ('admin', '123456', '管理员', '13900139000', 'admin@example.com', 'admin',1);
+INSERT INTO users (username, password, nickname, phone, email,avatar, bio, gender, birthday, background_image, role,status) VALUES
+    ('testuser', '123456', '麦子b2', '13800138000', 'test@example.com',
+    ' ',
+    '',
+    2,
+    '2026-01-01',
+    ' ',
+    'user', 1),
+    ('admin', '123456', '管理员', '13900139000', 'admin@example.com',
+    null, null, 0, null, null,
+    'admin', 1);
 
 -- 插入测试地址
 -- 注意：这里使用固定的用户ID 1（假设testuser的ID是1）
 -- 如果testuser的ID不是1，需要先查询
-INSERT INTO address (user_id, name, phone, address, is_default) VALUES
-    (1, '张三', '13800138000', '北京市海淀区中关村大街1号', 1),
-    (1, '李四', '13800138001', '上海市浦东新区陆家嘴', 0);
+INSERT INTO address (user_id, name, phone, street, address, is_default) VALUES
+    (1, '张三', '13800138000', '中关村大街1号', '海龙大厦12层1205室', 1),
+    (1, '李四', '13800138001', '陆家嘴环路1000号', '恒生银行大厦35层', 0);
 
 -- 插入测试演出
 INSERT INTO show_info (title, description, category, city, venue, cover_image,start_time, end_time, min_price, max_price, total_stock, available_stock, sale_start_time, status) VALUES
