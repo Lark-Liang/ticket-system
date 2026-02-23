@@ -34,6 +34,7 @@ public class AuthInterceptor implements  HandlerInterceptor{
         String requestURI = request.getRequestURI();
 
         // 检查方法是否有 @PassToken 注解
+        // TODO：已经有WebMvcConfig排除拦截的路径，为什么还需要这个注解
         if (method.isAnnotationPresent(PassToken.class)) {
             PassToken passToken = method.getAnnotation(PassToken.class);
             if (passToken.required()) {
@@ -69,6 +70,8 @@ public class AuthInterceptor implements  HandlerInterceptor{
         String role = TokenUtil.getRoleFromToken(authHeader);
 
         // 将 userId 存入 request，方便 Controller 使用
+        // TODO：问题没有得到根治，依旧每个controller都必须带上request参数，可以把这些信息放在ThreadLocal里，作为线程上下文
+        // TODO：参考：https://blog.csdn.net/zhuocailing3390/article/details/123030701，我就不在controller里赘述了
         request.setAttribute("userId", userId);
         request.setAttribute("userRole", role);
 

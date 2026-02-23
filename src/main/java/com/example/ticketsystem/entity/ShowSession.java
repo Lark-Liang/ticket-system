@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class ShowSession {
+    // TODO：没用的话就删掉吧
     private Long id;
     private Long showId;   //演出ID
     private LocalDateTime sessionTime;   //场次时间

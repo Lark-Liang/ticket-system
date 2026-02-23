@@ -41,6 +41,7 @@ public class ShowServiceImpl implements ShowService{
         List<Show> shows = showMapper.findHomeShows(city, limit);
 
         // 构建返回格式（从Controller复制过来的逻辑）
+        // TODO：为什么不单独创建一个结构体来返回，而且shows不能保证非空，有可能会报错空指针
         return shows.stream().map(show -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", show.getId());
@@ -67,6 +68,7 @@ public class ShowServiceImpl implements ShowService{
 
         List<Show> shows = showMapper.searchByKeyword(keyword.trim());
 
+        // TODO：同理创建结构体
         return shows.stream().map(show -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", show.getId());
@@ -83,6 +85,7 @@ public class ShowServiceImpl implements ShowService{
 
     @Override
     public Map<String, Object> listShows(String city, String category, int page, int size) {
+        // TODO：推荐使用Mybatis的分页插件
         // 参数处理
         if (page < 1) page = 1;
         if (size < 1 || size > 100) size = 10;
@@ -95,6 +98,7 @@ public class ShowServiceImpl implements ShowService{
         int totalPages = (int) Math.ceil((double) total / size);
 
         // 构建演出列表
+        // TODO：同理
         List<Map<String, Object>> showList = shows.stream().map(show -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", show.getId());
@@ -132,6 +136,7 @@ public class ShowServiceImpl implements ShowService{
         }
 
         // 构建详情数据（从Controller复制）
+        // TODO：同理
         Map<String, Object> result = new HashMap<>();
 
         // 基本信息

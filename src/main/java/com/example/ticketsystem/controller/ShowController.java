@@ -20,6 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/shows")
+// TODO：所有关于show的dto都没有，记得补上
 public class ShowController {
     @Autowired
     private ShowService showService;

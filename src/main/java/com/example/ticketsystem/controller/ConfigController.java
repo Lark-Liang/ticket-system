@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/config")
 public class ConfigController {
-
+    // TODO：这些东西不应该出现在controller里，参数配置要放在config里作为@component，测试要放在test文件夹
     @Autowired
     private JwtProperties jwtProperties;
 

@@ -47,6 +47,7 @@ public class AuthController {
             //调用统一的认证服务
             User user = authService.auth(request);
 
+            // TODO：下面这些逻辑也应该放在authService.auth里
             //生成JWT Token
             String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
             String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
@@ -62,6 +63,7 @@ public class AuthController {
             );
 
             //判断是登录还是注册
+            // TODO：逻辑有问题而且没必要为了一个message
             boolean isNewUser = false;
             if (user.getCreatedAt() != null) {
                 //如果创建时间与当前时间相差很小，认为是新用户
@@ -117,6 +119,7 @@ public class AuthController {
         }
 
         //生成JWT Token
+        // TODO：同理放在authService里
         String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
 
