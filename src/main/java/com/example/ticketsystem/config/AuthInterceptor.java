@@ -29,27 +29,7 @@ public class AuthInterceptor implements  HandlerInterceptor{
             return true;
         }
 
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        Method method = handlerMethod.getMethod();
         String requestURI = request.getRequestURI();
-
-        // 检查方法是否有 @PassToken 注解
-        // TODO：已经有WebMvcConfig排除拦截的路径，为什么还需要这个注解
-        if (method.isAnnotationPresent(PassToken.class)) {
-            PassToken passToken = method.getAnnotation(PassToken.class);
-            if (passToken.required()) {
-                return true;  // 跳过验证
-            }
-        }
-
-        // 检查类是否有 @PassToken 注解（类上的注解对该类所有方法生效）
-        Class<?> controllerClass = handlerMethod.getBeanType();
-        if (controllerClass.isAnnotationPresent(PassToken.class)) {
-            PassToken passToken = controllerClass.getAnnotation(PassToken.class);
-            if (passToken.required()) {
-                return true;  // 跳过验证
-            }
-        }
 
         // 从请求头获取 Token
         String authHeader = request.getHeader("Authorization");

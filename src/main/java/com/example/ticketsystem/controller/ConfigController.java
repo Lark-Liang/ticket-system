@@ -1,6 +1,5 @@
 package com.example.ticketsystem.controller;
 
-import com.example.ticketsystem.annotation.PassToken;
 import com.example.ticketsystem.config.JwtProperties;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.util.EnvUtil;
@@ -74,7 +73,6 @@ public class ConfigController {
      * 测试JWT生成和解析
      */
     @GetMapping("/jwt/test")
-    @PassToken
     public ApiResponse<?> testJwtGeneration() {
         Long testUserId = 999L;
         String testUsername = "testuser";
@@ -117,7 +115,6 @@ public class ConfigController {
      * 测试Token工具类
      */
     @GetMapping("/token/test")
-    @PassToken
     public ApiResponse<?> testTokenUtil(@RequestHeader(value = "Authorization", required = false) String authHeader) {
         Map<String, Object> result = new HashMap<>();
 

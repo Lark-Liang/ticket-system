@@ -1,6 +1,5 @@
 package com.example.ticketsystem.controller;
 
-import com.example.ticketsystem.annotation.PassToken;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.dto.SeckillRequest;
 import com.example.ticketsystem.service.ShowService;
@@ -41,7 +40,6 @@ public class ShowController {
      * 搜索演出（游客也可以访问）
      */
     @GetMapping("/search")
-    @PassToken
     public ApiResponse<Object> searchShows(@RequestParam String keyword) {
         try {
             List<Map<String, Object>> result = showService.searchShows(keyword);
@@ -55,7 +53,6 @@ public class ShowController {
      * 条件查询演出（分页）（游客也可以访问）
      */
     @GetMapping("/list")
-    @PassToken
     public ApiResponse<Object> listShows(
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String category,
@@ -70,7 +67,6 @@ public class ShowController {
      * 辅助接口：获取所有有演出的城市列表（游客也可以访问）
      */
     @GetMapping("/cities")
-    @PassToken
     public ApiResponse<Object> getAllCities() {
         List<String> cities = showService.getAllCities();
         return ApiResponse.success(cities);
@@ -80,7 +76,6 @@ public class ShowController {
      * 辅助接口：获取所有演出分类列表（游客也可以访问）
      */
     @GetMapping("/categories")
-    @PassToken
     public ApiResponse<Object> getAllCategories() {
         List<String> categories = showService.getAllCategories();
         return ApiResponse.success(categories);
@@ -90,7 +85,6 @@ public class ShowController {
      * 获取演出详情（游客也可以访问）
      */
     @GetMapping("/{id}")
-    @PassToken
     public ApiResponse<?> getShowDetail(@PathVariable Long id) {
         try {
             Map<String, Object> result = showService.getShowDetail(id);

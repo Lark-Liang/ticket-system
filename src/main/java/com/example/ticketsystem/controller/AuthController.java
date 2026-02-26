@@ -1,6 +1,5 @@
 package com.example.ticketsystem.controller;
 
-import com.example.ticketsystem.annotation.PassToken;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.dto.AuthRequest;
 import com.example.ticketsystem.dto.EmailLoginRequest;
@@ -36,7 +35,6 @@ public class AuthController {
     /**登录/注册接口
      */
     @PostMapping("/login")
-    @PassToken
     public ApiResponse<?> auth(@RequestBody AuthRequest request) {
         try {
             //基本验证
@@ -91,7 +89,6 @@ public class AuthController {
      * 邮箱登录接口
      */
     @PostMapping("/login/email")
-    @PassToken
     public ApiResponse<?> loginByEmail(@RequestBody EmailLoginRequest request) {
         //参数验证
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
@@ -159,7 +156,7 @@ public class AuthController {
      * 刷新Access Token接口
      */
     @PostMapping("/refresh")
-    @PassToken  //刷新Token接口，不需要验证（用旧的Refresh Token）
+    //刷新Token接口，不需要验证（用旧的Refresh Token）
     public ApiResponse<?> refreshToken(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = TokenUtil.extractTokenFromHeader(authHeader);
