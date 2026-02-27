@@ -3,6 +3,7 @@ package com.example.ticketsystem.controller;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.entity.Order;
 import com.example.ticketsystem.service.OrderService;
+import com.example.ticketsystem.util.RequestHolder;
 import com.example.ticketsystem.util.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,11 @@ public class OrderController {
      */
     @GetMapping("/list")
     public ApiResponse<?> getOrderList(
-            HttpServletRequest request,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             Map<String, Object> result = orderService.getUserOrderList(userId, status, page, size);
@@ -46,11 +46,9 @@ public class OrderController {
      * 获取订单详情
      */
     @GetMapping("/{id}")
-    public ApiResponse<?> getOrderDetail(
-            HttpServletRequest request,
-            @PathVariable Long id) {
+    public ApiResponse<?> getOrderDetail(@PathVariable Long id) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             Order order = orderService.getOrderDetail(userId, id);
@@ -67,11 +65,9 @@ public class OrderController {
      * 取消订单
      */
     @PostMapping("/{id}/cancel")
-    public ApiResponse<?> cancelOrder(
-            HttpServletRequest request,
-            @PathVariable Long id) {
+    public ApiResponse<?> cancelOrder(@PathVariable Long id) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             orderService.cancelOrder(userId, id);

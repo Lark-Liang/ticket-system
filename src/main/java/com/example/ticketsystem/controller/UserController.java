@@ -4,6 +4,7 @@ import com.example.ticketsystem.dto.*;
 import com.example.ticketsystem.entity.Address;
 import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.service.UserService;
+import com.example.ticketsystem.util.RequestHolder;
 import com.example.ticketsystem.util.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class UserController {
      * GET /user/info
      */
     @GetMapping("/info")
-    public ApiResponse<Object> getUserInfo(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+    public ApiResponse<Object> getUserInfo() {
+        Long userId = RequestHolder.getUserId();
 
         try {
             UserInfoDTO userInfo = userService.getUserInfo(userId);
@@ -44,14 +45,12 @@ public class UserController {
     }
 
     /**修改个人信息
-     * GET /user/info
+     * PUT /user/info
      */
     @PutMapping("/info")
-    public ApiResponse<Object> updateUserInfo(
-            HttpServletRequest request,
-            @RequestBody UserUpdateRequest userUpdateRequest) {
+    public ApiResponse<Object> updateUserInfo(@RequestBody UserUpdateRequest userUpdateRequest) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         // TODO：注意当前代码无法允许用户把字段设置为空，后续要改
         try {
@@ -68,8 +67,8 @@ public class UserController {
      * GET /user/addresses
      */
     @GetMapping("/addresses")
-    public ApiResponse<Object> getAddresses(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+    public ApiResponse<Object> getAddresses() {
+        Long userId = RequestHolder.getUserId();
 
         // TODO：如果这里地址查出来是空，会报错空指针
         try {
@@ -88,11 +87,9 @@ public class UserController {
      */
     @PostMapping("/address")
     @Transactional
-    public ApiResponse<Object> addAddress(
-            HttpServletRequest request,
-            @RequestBody AddressRequest addressRequest) {
+    public ApiResponse<Object> addAddress(@RequestBody AddressRequest addressRequest) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             Address address = userService.addAddress(userId, addressRequest);
@@ -108,11 +105,10 @@ public class UserController {
     @PutMapping("/address/{id}")
     @Transactional
     public ApiResponse<Object> updateAddress(
-            HttpServletRequest request,
             @PathVariable Long id,
             @RequestBody AddressRequest addressRequest) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             Address address = userService.updateAddress(userId, id, addressRequest);
@@ -127,11 +123,9 @@ public class UserController {
      */
     @DeleteMapping("/address/{id}")
     @Transactional
-    public ApiResponse<Object> deleteAddress(
-            HttpServletRequest request,
-            @PathVariable Long id) {
+    public ApiResponse<Object> deleteAddress(@PathVariable Long id) {
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             userService.deleteAddress(userId, id);

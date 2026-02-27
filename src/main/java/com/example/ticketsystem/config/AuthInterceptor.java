@@ -1,6 +1,6 @@
 package com.example.ticketsystem.config;
 
-import com.example.ticketsystem.annotation.PassToken;
+import com.example.ticketsystem.util.RequestHolder;
 import com.example.ticketsystem.util.TokenUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -9,7 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 /**
  * @author Lark
@@ -49,11 +48,13 @@ public class AuthInterceptor implements  HandlerInterceptor{
         // 获取用户角色
         String role = TokenUtil.getRoleFromToken(authHeader);
 
-        // 将 userId 存入 request，方便 Controller 使用
-        // TODO：问题没有得到根治，依旧每个controller都必须带上request参数，可以把这些信息放在ThreadLocal里，作为线程上下文
-        // TODO：参考：https://blog.csdn.net/zhuocailing3390/article/details/123030701，我就不在controller里赘述了
-        request.setAttribute("userId", userId);
-        request.setAttribute("userRole", role);
+        // 将用户信息存入ThreadLocal
+        if (requestURI.startsWith(ADMIN_PATH_PREFIX)) {
+            if (!"admin".equals(role)) {
+                sendForbiddenResponse(response, "需要管理员权限");
+                return false;
+            }
+        }
 
         // 检查是否是管理员路径，如果是则验证角色
         if (requestURI.startsWith(ADMIN_PATH_PREFIX)) {
@@ -64,6 +65,12 @@ public class AuthInterceptor implements  HandlerInterceptor{
         }
 
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 请求结束后，清理ThreadLocal，防止内存泄漏
+        RequestHolder.remove();
     }
 
     /**

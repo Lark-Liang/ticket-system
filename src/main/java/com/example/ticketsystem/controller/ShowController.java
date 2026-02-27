@@ -3,6 +3,7 @@ package com.example.ticketsystem.controller;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.dto.SeckillRequest;
 import com.example.ticketsystem.service.ShowService;
+import com.example.ticketsystem.util.RequestHolder;
 import com.example.ticketsystem.util.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,11 +99,10 @@ public class ShowController {
      */
     @PostMapping("/{showId}/tickets/seckill")
     public ApiResponse<?> seckillTicket(
-            HttpServletRequest request,
             @PathVariable Long showId,
             @RequestBody SeckillRequest seckillRequest){   //从请求体获取JSON参数
 
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         try {
             String orderNo = showService.seckillTicket(userId, showId, seckillRequest);

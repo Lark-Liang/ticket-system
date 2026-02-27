@@ -4,6 +4,7 @@ import com.example.ticketsystem.config.JwtProperties;
 import com.example.ticketsystem.dto.ApiResponse;
 import com.example.ticketsystem.util.EnvUtil;
 import com.example.ticketsystem.util.JwtUtil;
+import com.example.ticketsystem.util.RequestHolder;
 import com.example.ticketsystem.util.TokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,8 @@ public class ConfigController {
      * GET /api/config/jwt
      */
     @GetMapping("/jwt")
-    public ApiResponse<?> getJwtConfig(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+    public ApiResponse<?> getJwtConfig() {
+        Long userId = RequestHolder.getUserId();
 
         Map<String, Object> config = new HashMap<>();
         config.put("application", appName);
