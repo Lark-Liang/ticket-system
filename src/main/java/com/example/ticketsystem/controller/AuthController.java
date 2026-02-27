@@ -7,6 +7,7 @@ import com.example.ticketsystem.dto.TokenResponse;
 import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.service.AuthService;
 import com.example.ticketsystem.util.JwtUtil;
+import com.example.ticketsystem.util.RequestHolder;
 import com.example.ticketsystem.util.TokenUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,38 +44,14 @@ public class AuthController {
             }
 
             //调用统一的认证服务
-            User user = authService.auth(request);
+            TokenResponse tokenResponse = authService.auth(request);
 
-            // TODO：下面这些逻辑也应该放在authService.auth里
-            //生成JWT Token
-            String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
-            String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
-
-            //构建响应数据
-            TokenResponse tokenResponse = new TokenResponse(
-                    accessToken,
-                    refreshToken,
-                    jwtUtil.getRemainingTime(accessToken),
-                    user.getId(),
-                    user.getUsername(),
-                    user.getRole()
-            );
-
-            //判断是登录还是注册
-            // TODO：逻辑有问题而且没必要为了一个message
-            boolean isNewUser = false;
-            if (user.getCreatedAt() != null) {
-                //如果创建时间与当前时间相差很小，认为是新用户
-                long createTimeMillis = user.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                long currentTimeMillis = System.currentTimeMillis();
-                isNewUser = (currentTimeMillis - createTimeMillis) < 10000;   //10秒内
-            }
-
+            //构建返回数据
             Map<String, Object> data = new HashMap<>();
             data.put("token", tokenResponse);
-            data.put("isNewUser", isNewUser);
+            data.put("isNewUser", tokenResponse.getIsNewUser());
 
-            String message = isNewUser ? "注册并登录成功" : "登录成功";
+            String message = tokenResponse.getIsNewUser() ? "注册并登录成功" : "登录成功";
             return ApiResponse.success(message, data);
 
         } catch (RuntimeException e) {
@@ -104,47 +81,28 @@ public class AuthController {
             return ApiResponse.error(400, "邮箱格式不正确");
         }
 
-        //调用Service进行登录验证
-        User user = authService.loginByEmail(email, request.getPassword());
-        if (user == null) {
-            return ApiResponse.error(401, "邮箱或密码错误");
+        try {
+            // 调用Service进行登录验证
+            TokenResponse tokenResponse = authService.loginByEmail(email, request.getPassword());
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("token", tokenResponse);
+            data.put("userId", tokenResponse.getUserId());
+            data.put("username", tokenResponse.getUsername());
+            data.put("role", tokenResponse.getRole());
+
+            return ApiResponse.success("登录成功", data);
+
+        } catch (RuntimeException e) {
+            return ApiResponse.error(401, e.getMessage());
         }
-
-        //检查用户状态
-        if (user.getStatus() != null && user.getStatus() == 0) {
-            return ApiResponse.error(403, "用户已被禁用");
-        }
-
-        //生成JWT Token
-        // TODO：同理放在authService里
-        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
-
-        TokenResponse tokenResponse = new TokenResponse(
-                accessToken,
-                refreshToken,
-                jwtUtil.getRemainingTime(accessToken),
-                user.getId(),
-                user.getUsername(),
-                user.getRole()
-        );
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("token", tokenResponse);
-        data.put("userId", user.getId());
-        data.put("username", user.getUsername());
-        data.put("email", user.getEmail());
-        data.put("nickname", user.getNickname());
-        data.put("role", user.getRole());
-
-        return ApiResponse.success("登录成功", data);
     }
 
     /**退出接口
      */
     @PostMapping("/logout")
     public ApiResponse<Object> logout(HttpServletRequest request)  {
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = RequestHolder.getUserId();
 
         // TODO: 后续这里应该：将Token加入黑名单（Redis）、清除用户会话、记录日志
         System.out.println("用户退出: " + userId);

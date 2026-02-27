@@ -1,9 +1,11 @@
 package com.example.ticketsystem.service.impl;
 
 import com.example.ticketsystem.dto.AuthRequest;
+import com.example.ticketsystem.dto.TokenResponse;
 import com.example.ticketsystem.entity.User;
 import com.example.ticketsystem.mapper.UserMapper;
 import com.example.ticketsystem.service.AuthService;
+import com.example.ticketsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +20,41 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
-    public User auth(AuthRequest request) {
+    public TokenResponse auth(AuthRequest request) {
         //查找用户是否存在
         User user = userMapper.findByUsername(request.getUsername());
+        boolean isNewUser = false;
         if (user != null) {
             //用户存在:登录
-            return login(user, request.getPassword());
+            user = login(user, request.getPassword());
         } else {
             //用户不存在:注册
-            return register(request);
+            user = register(request);
+            isNewUser = true;
         }
+
+        // 生成JWT Token
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
+
+        // 构建TokenResponse
+        TokenResponse tokenResponse = new TokenResponse(
+                accessToken,
+                refreshToken,
+                jwtUtil.getRemainingTime(accessToken),
+                user.getId(),
+                user.getUsername(),
+                user.getRole()
+        );
+
+        // 设置是否为新用户标识
+        tokenResponse.setIsNewUser(isNewUser);
+
+        return tokenResponse;
     }
 
     @Override
@@ -82,14 +108,31 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User loginByEmail(String email, String password) {
+    public TokenResponse loginByEmail(String email, String password) {
         //根据邮箱查询用户
         User user = userMapper.findByEmail(email);
 
         //验证密码
         if (user != null && user.getPassword() != null && user.getPassword().equals(password)) {
-            return user;
+            // 检查用户状态
+            if (user.getStatus() != null && user.getStatus() == 0) {
+                throw new RuntimeException("用户已被禁用");
+            }
+
+            // 生成JWT Token
+            String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername(), user.getRole());
+            String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
+
+            // 构建TokenResponse
+            return new TokenResponse(
+                    accessToken,
+                    refreshToken,
+                    jwtUtil.getRemainingTime(accessToken),
+                    user.getId(),
+                    user.getUsername(),
+                    user.getRole()
+            );
         }
-        return null;
+        throw new RuntimeException("邮箱或密码错误");
     }
 }

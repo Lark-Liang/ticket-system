@@ -20,6 +20,7 @@ public class TokenResponse {
     private Long userId;
     private String username;
     private String role;
+    private Boolean isNewUser;
 
     public TokenResponse(String accessToken, String refreshToken, Long expiresIn, Long userId, String username, String role) {
         this.accessToken = accessToken;
@@ -29,6 +30,7 @@ public class TokenResponse {
         this.userId = userId;
         this.username = username;
         this.role = role;
+        this.isNewUser = false;
     }
 
     //只返回Access Token的构造方法（兼容旧版）
