@@ -32,23 +32,12 @@ public interface OrderMapper {
             "SELECT * FROM `order` WHERE user_id = #{userId}",
             "<if test='status != null'> AND status = #{status} </if>",
             " ORDER BY created_at DESC",
-            " LIMIT #{offset}, #{size}",
             "</script>"
     })
     List<Order> findByUserId(@Param("userId") Long userId,
-                             @Param("status") String status,
-                             @Param("offset") int offset,
-                             @Param("size") int size);
+                             @Param("status") String status);
 
-    //统计用户订单数量
-    @Select({
-            "<script>",
-            "SELECT COUNT(*) FROM `order` WHERE user_id = #{userId}",
-            "<if test='status != null'> AND status = #{status} </if>",
-            "</script>"
-    })
-    int countByUserId(@Param("userId") Long userId,
-                      @Param("status") String status);
+
 
     //更新订单状态
     @Update("UPDATE `order` SET status = #{status}, updated_at = NOW() WHERE id = #{id}")

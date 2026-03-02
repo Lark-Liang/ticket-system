@@ -1,6 +1,6 @@
 package com.example.ticketsystem.service;
 
-import com.example.ticketsystem.dto.SeckillRequest;
+import com.example.ticketsystem.dto.*;
 import com.example.ticketsystem.entity.Show;
 
 import java.util.List;
@@ -13,16 +13,16 @@ import java.util.Map;
  */
 public interface ShowService {
     // 首页演出列表
-    List<Map<String, Object>> getHomeShows(String city, int limit);
+    ListResponseDTO<ShowListDTO> getHomeShows(String city, int limit);
 
     // 搜索演出
-    List<Map<String, Object>> searchShows(String keyword);
+    ListResponseDTO<ShowSearchDTO> searchShows(String keyword);
 
     // 条件分页查询
-    Map<String, Object> listShows(String city, String category, int page, int size);
+    ListResponseDTO<ShowListDTO> listShows(String city, String category, int page, int size);
 
     // 获取演出详情
-    Map<String, Object> getShowDetail(Long showId);
+    ShowDetailDTO getShowDetail(Long showId);
 
     // 抢票
     String seckillTicket(Long userId, Long showId, SeckillRequest request);

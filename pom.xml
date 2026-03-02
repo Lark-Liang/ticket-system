@@ -40,6 +40,13 @@
             <version>3.0.3</version>
         </dependency>
 
+        <!-- MyBatis 分页插件 PageHelper -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
         <!-- MySQL Driver -->
         <dependency>
             <groupId>com.mysql</groupId>

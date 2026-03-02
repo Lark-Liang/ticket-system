@@ -1,10 +1,12 @@
 package com.example.ticketsystem.service.impl;
 
-import com.example.ticketsystem.dto.SeckillRequest;
+import com.example.ticketsystem.dto.*;
 import com.example.ticketsystem.entity.Show;
 import com.example.ticketsystem.mapper.ShowMapper;
 import com.example.ticketsystem.service.SeckillService;
 import com.example.ticketsystem.service.ShowService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,7 @@ public class ShowServiceImpl implements ShowService{
     private SeckillService seckillService;  // 抢票服务
 
     @Override
-    public List<Map<String, Object>> getHomeShows(String city, int limit) {
+    public ListResponseDTO<ShowListDTO> getHomeShows(String city, int limit) {
         // 参数处理
         if (city == null || city.trim().isEmpty()) {
             city = "北京";
@@ -40,95 +42,58 @@ public class ShowServiceImpl implements ShowService{
         // 查询数据
         List<Show> shows = showMapper.findHomeShows(city, limit);
 
-        // 构建返回格式（从Controller复制过来的逻辑）
-        // TODO：为什么不单独创建一个结构体来返回，而且shows不能保证非空，有可能会报错空指针
-        return shows.stream().map(show -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", show.getId());
-            map.put("title", show.getTitle());
-            map.put("category", show.getCategory());
-            map.put("city", show.getCity());
-            map.put("coverImage", show.getCoverImage());
-            map.put("venue", show.getVenue());
-            map.put("startTime", show.getStartTime());
-            map.put("endTime", show.getEndTime());
-            map.put("minPrice", show.getMinPrice());
-            map.put("maxPrice", show.getMaxPrice());
-            map.put("hasStock", show.hasStock());
-            map.put("onSale", show.isOnSale());
-            return map;
-        }).toList();
+        // 构建返回格式
+        List<ShowListDTO> showList = shows.stream()
+                .map(ShowListDTO::fromShow)
+                .toList();
+        return ListResponseDTO.of(showList, (long) showList.size(), 1, showList.size());
     }
 
     @Override
-    public List<Map<String, Object>> searchShows(String keyword) {
+    public ListResponseDTO<ShowSearchDTO> searchShows(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             throw new RuntimeException("搜索关键词不能为空");
         }
 
         List<Show> shows = showMapper.searchByKeyword(keyword.trim());
 
-        // TODO：同理创建结构体
-        return shows.stream().map(show -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", show.getId());
-            map.put("title", show.getTitle());
-            map.put("category", show.getCategory());
-            map.put("city", show.getCity());
-            map.put("coverImage", show.getCoverImage());
-            map.put("startTime", show.getStartTime());
-            map.put("hasStock", show.hasStock());
-            map.put("onSale", show.isOnSale());
-            return map;
-        }).toList();
+        List<ShowSearchDTO> searchList = shows.stream()
+                .map(ShowSearchDTO::fromShow)
+                .toList();
+
+        return ListResponseDTO.of(searchList, (long) searchList.size(), 1, searchList.size());
     }
 
     @Override
-    public Map<String, Object> listShows(String city, String category, int page, int size) {
-        // TODO：推荐使用Mybatis的分页插件
+    public ListResponseDTO<ShowListDTO> listShows(String city, String category, int page, int size) {
         // 参数处理
         if (page < 1) page = 1;
         if (size < 1 || size > 100) size = 10;
 
-        int offset = (page - 1) * size;
+        // 使用 PageHelper 开始分页
+        PageHelper.startPage(page, size);
 
         // 查询数据
-        List<Show> shows = showMapper.findByConditions(city, category, offset, size);
-        int total = showMapper.countByConditions(city, category);
-        int totalPages = (int) Math.ceil((double) total / size);
+        List<Show> shows = showMapper.findByConditions(city, category);
 
-        // 构建演出列表
-        // TODO：同理
-        List<Map<String, Object>> showList = shows.stream().map(show -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", show.getId());
-            map.put("title", show.getTitle());
-            map.put("category", show.getCategory());
-            map.put("city", show.getCity());
-            map.put("coverImage", show.getCoverImage());
-            map.put("startTime", show.getStartTime());
-            map.put("minPrice", show.getMinPrice());
-            map.put("maxPrice", show.getMaxPrice());
-            map.put("hasStock", show.hasStock());
-            map.put("onSale", show.isOnSale());
-            return map;
-        }).toList();
+        // 使用 PageInfo 获取分页信息
+        PageInfo<Show> pageInfo = new PageInfo<>(shows);
 
-        // 构建分页结果
-        Map<String, Object> result = new HashMap<>();
-        result.put("list", showList);
-        result.put("total", total);
-        result.put("page", page);
-        result.put("size", size);
-        result.put("totalPages", totalPages);
-        result.put("hasNext", page < totalPages);
-        result.put("hasPrev", page > 1);
+        List<ShowListDTO> showList = shows.stream()
+                .map(ShowListDTO::fromShow)
+                .toList();
 
-        return result;
+        // 返回统一结构体
+        return ListResponseDTO.of(
+                showList,
+                pageInfo.getTotal(),
+                pageInfo.getPageNum(),
+                pageInfo.getPageSize()
+        );
     }
 
     @Override
-    public Map<String, Object> getShowDetail(Long showId) {
+    public ShowDetailDTO getShowDetail(Long showId) {
         Show show = showMapper.findById(showId);
 
         if (show == null) {
@@ -136,35 +101,7 @@ public class ShowServiceImpl implements ShowService{
         }
 
         // 构建详情数据（从Controller复制）
-        // TODO：同理
-        Map<String, Object> result = new HashMap<>();
-
-        // 基本信息
-        result.put("id", show.getId());
-        result.put("title", show.getTitle());
-        result.put("description", show.getDescription());
-        result.put("category", show.getCategory());
-        result.put("city", show.getCity());
-        result.put("venue", show.getVenue());
-        result.put("coverImage", show.getCoverImage());
-        result.put("startTime", show.getStartTime());
-        result.put("endTime", show.getEndTime());
-        result.put("minPrice", show.getMinPrice());
-        result.put("maxPrice", show.getMaxPrice());
-
-        // 业务状态
-        result.put("status", show.getStatus());
-        result.put("onSale", show.isOnSale());
-        result.put("hasStock", show.hasStock());
-
-        // 场次信息（简化版）
-        List<Map<String, Object>> sessions = new ArrayList<>();
-        Map<String, Object> session = new HashMap<>();
-        session.put("id", 1);
-        session.put("time", show.getStartTime());
-        session.put("status", show.isOnSale() ? "on_sale" : "not_start");
-        sessions.add(session);
-        result.put("sessions", sessions);
+        ShowDetailDTO detailDTO = ShowDetailDTO.fromShow(show);
 
         // 票档信息（简化版）
         List<Map<String, Object>> ticketTiers = new ArrayList<>();
@@ -183,9 +120,9 @@ public class ShowServiceImpl implements ShowService{
         standardTier.put("stockAvailable", show.hasStock());
         ticketTiers.add(standardTier);
 
-        result.put("ticketTiers", ticketTiers);
+        detailDTO.setTicketTiers(ticketTiers);
 
-        return result;
+        return detailDTO;
     }
 
     @Override

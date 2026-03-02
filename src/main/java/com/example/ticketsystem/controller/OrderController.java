@@ -1,6 +1,9 @@
 package com.example.ticketsystem.controller;
 
 import com.example.ticketsystem.dto.ApiResponse;
+import com.example.ticketsystem.dto.ListResponseDTO;
+import com.example.ticketsystem.dto.OrderDTO;
+import com.example.ticketsystem.dto.OrderDetailDTO;
 import com.example.ticketsystem.entity.Order;
 import com.example.ticketsystem.service.OrderService;
 import com.example.ticketsystem.util.RequestHolder;
@@ -35,7 +38,7 @@ public class OrderController {
         Long userId = RequestHolder.getUserId();
 
         try {
-            Map<String, Object> result = orderService.getUserOrderList(userId, status, page, size);
+            ListResponseDTO<OrderDTO> result = orderService.getUserOrderList(userId, status, page, size);
             return ApiResponse.success(result);
         } catch (RuntimeException e) {
             return ApiResponse.error(400, e.getMessage());
@@ -51,8 +54,8 @@ public class OrderController {
         Long userId = RequestHolder.getUserId();
 
         try {
-            Order order = orderService.getOrderDetail(userId, id);
-            return ApiResponse.success(order);
+            OrderDetailDTO orderDetail = orderService.getOrderDetail(userId, id);
+            return ApiResponse.success(orderDetail);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("不存在")) {
                 return ApiResponse.error(404, e.getMessage());

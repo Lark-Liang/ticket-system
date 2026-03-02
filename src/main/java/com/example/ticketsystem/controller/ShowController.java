@@ -1,11 +1,8 @@
 package com.example.ticketsystem.controller;
 
-import com.example.ticketsystem.dto.ApiResponse;
-import com.example.ticketsystem.dto.SeckillRequest;
+import com.example.ticketsystem.dto.*;
 import com.example.ticketsystem.service.ShowService;
 import com.example.ticketsystem.util.RequestHolder;
-import com.example.ticketsystem.util.TokenUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +17,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/shows")
-// TODO：所有关于show的dto都没有，记得补上
 public class ShowController {
     @Autowired
     private ShowService showService;
@@ -33,7 +29,7 @@ public class ShowController {
             @RequestParam(defaultValue = "北京") String city,
             @RequestParam(defaultValue = "10") int limit) {
 
-        List<Map<String, Object>> result = showService.getHomeShows(city, limit);
+        ListResponseDTO<ShowListDTO> result = showService.getHomeShows(city, limit);
         return ApiResponse.success(result);
     }
 
@@ -43,7 +39,7 @@ public class ShowController {
     @GetMapping("/search")
     public ApiResponse<Object> searchShows(@RequestParam String keyword) {
         try {
-            List<Map<String, Object>> result = showService.searchShows(keyword);
+            ListResponseDTO<ShowSearchDTO> result = showService.searchShows(keyword);
             return ApiResponse.success(result);
         } catch (RuntimeException e) {
             return ApiResponse.error(400, e.getMessage());
@@ -60,7 +56,7 @@ public class ShowController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Map<String, Object> result = showService.listShows(city, category, page, size);
+        ListResponseDTO<ShowListDTO> result = showService.listShows(city, category, page, size);
         return ApiResponse.success(result);
     }
 
@@ -88,7 +84,7 @@ public class ShowController {
     @GetMapping("/{id}")
     public ApiResponse<?> getShowDetail(@PathVariable Long id) {
         try {
-            Map<String, Object> result = showService.getShowDetail(id);
+            ShowDetailDTO result = showService.getShowDetail(id);
             return ApiResponse.success(result);
         } catch (RuntimeException e) {
             return ApiResponse.error(404, e.getMessage());

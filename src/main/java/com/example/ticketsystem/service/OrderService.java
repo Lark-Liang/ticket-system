@@ -1,9 +1,8 @@
 package com.example.ticketsystem.service;
 
-import com.example.ticketsystem.entity.Order;
-
-import java.util.List;
-import java.util.Map;
+import com.example.ticketsystem.dto.ListResponseDTO;
+import com.example.ticketsystem.dto.OrderDTO;
+import com.example.ticketsystem.dto.OrderDetailDTO;
 
 /**
  * @author Lark
@@ -12,10 +11,10 @@ import java.util.Map;
  */
 public interface OrderService {
     //分页查询用户订单
-    Map<String, Object> getUserOrderList(Long userId, String status, int page, int size);
+    ListResponseDTO<OrderDTO> getUserOrderList(Long userId, String status, int page, int size);
 
     //获取订单详情
-    Order getOrderDetail(Long userId, Long orderId);
+    OrderDetailDTO getOrderDetail(Long userId, Long orderId);
 
     //取消订单
     void cancelOrder(Long userId, Long orderId);

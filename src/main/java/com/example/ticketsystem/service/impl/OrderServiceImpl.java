@@ -1,15 +1,18 @@
 package com.example.ticketsystem.service.impl;
 
+import com.example.ticketsystem.dto.ListResponseDTO;
+import com.example.ticketsystem.dto.OrderDTO;
+import com.example.ticketsystem.dto.OrderDetailDTO;
 import com.example.ticketsystem.entity.Order;
 import com.example.ticketsystem.mapper.OrderMapper;
 import com.example.ticketsystem.service.OrderService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Lark
@@ -22,8 +25,7 @@ public class OrderServiceImpl implements OrderService{
     private OrderMapper orderMapper;
 
     @Override
-    public Map<String, Object> getUserOrderList(Long userId, String status, int page, int size) {
-        // TODO：分页使用Mybatis分页插件
+    public ListResponseDTO<OrderDTO> getUserOrderList(Long userId, String status, int page, int size) {
         // 参数校验
         if (userId == null) {
             throw new RuntimeException("用户ID不能为空");
@@ -32,28 +34,30 @@ public class OrderServiceImpl implements OrderService{
         // 计算分页
         if (page < 1) page = 1;
         if (size < 1 || size > 100) size = 10;
-        int offset = (page - 1) * size;
+
+        // 使用 PageHelper 开始分页
+        PageHelper.startPage(page, size);
 
         // 查询订单
-        List<Order> orders = orderMapper.findByUserId(userId, status, offset, size);
-        int total = orderMapper.countByUserId(userId, status);
-        int totalPages = (int) Math.ceil((double) total / size);
+        List<Order> orders = orderMapper.findByUserId(userId, status);
 
-        // 构建分页结果
-        Map<String, Object> result = new HashMap<>();
-        result.put("list", orders);
-        result.put("total", total);
-        result.put("page", page);
-        result.put("size", size);
-        result.put("totalPages", totalPages);
-        result.put("hasNext", page < totalPages);
-        result.put("hasPrev", page > 1);
+        // 使用 PageInfo 获取分页信息
+        PageInfo<Order> pageInfo = new PageInfo<>(orders);
 
-        return result;
+        List<OrderDTO> orderDTOs = orders.stream()
+                .map(OrderDTO::fromOrder)
+                .toList();
+
+        return ListResponseDTO.of(
+                orderDTOs,
+                pageInfo.getTotal(),
+                pageInfo.getPageNum(),
+                pageInfo.getPageSize()
+        );
     }
 
     @Override
-    public Order getOrderDetail(Long userId, Long orderId) {
+    public OrderDetailDTO getOrderDetail(Long userId, Long orderId) {
         if (userId == null || orderId == null) {
             throw new RuntimeException("参数不能为空");
         }
@@ -65,7 +69,7 @@ public class OrderServiceImpl implements OrderService{
         if (!order.getUserId().equals(userId)) {
             throw new RuntimeException("无权查看此订单");
         }
-        return order;
+        return OrderDetailDTO.fromOrder(order);
     }
 
     @Override

@@ -28,23 +28,10 @@ public interface ShowMapper {
             "<if test='city != null'> AND city = #{city} </if>",
             "<if test='category != null'> AND category = #{category} </if>",
             " ORDER BY sale_start_time DESC",
-            " LIMIT #{offset}, #{pageSize}",
             "</script>"
     })
     List<Show> findByConditions(@Param("city") String city,
-                                @Param("category") String category,
-                                @Param("offset") int offset,
-                                @Param("pageSize") int pageSize);
-
-    //条件查询总数（用于分页）
-    @Select({
-            "<script>",
-            "SELECT COUNT(*) FROM `show_info` WHERE status = 1",
-            "<if test='city != null'> AND city = #{city} </if>",
-            "<if test='category != null'> AND category = #{category} </if>",
-            "</script>"
-    })
-    int countByConditions(@Param("city") String city, @Param("category") String category);
+                                @Param("category") String category);
 
     //根据ID查询演出详情
     @Select("SELECT * FROM `show_info` WHERE id = #{id}")
