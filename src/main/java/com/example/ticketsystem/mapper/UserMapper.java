@@ -3,6 +3,8 @@ package com.example.ticketsystem.mapper;
 import com.example.ticketsystem.entity.User;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * @author Lark
  * @ date 2025/12/11  20:52
@@ -40,4 +42,36 @@ public interface UserMapper {
             " WHERE id = #{id}" +
             "</script>")
     int update(User user);
+
+    // ====== 管理员查询方法 ======
+
+    /**
+     * 条件查询用户列表（分页由PageHelper处理）
+     */
+    @Select({
+            "<script>",
+            "SELECT * FROM users WHERE 1=1",
+            "<if test='username != null and username != \"\"'> AND username LIKE CONCAT('%', #{username}, '%')</if>",
+            "<if test='phone != null and phone != \"\"'> AND phone LIKE CONCAT('%', #{phone}, '%')</if>",
+            "<if test='email != null and email != \"\"'> AND email LIKE CONCAT('%', #{email}, '%')</if>",
+            "<if test='status != null'> AND status = #{status}</if>",
+            "<if test='role != null and role != \"\"'> AND role = #{role}</if>",
+            "<if test='startDate != null and startDate != \"\"'> AND DATE(created_at) >= #{startDate}</if>",
+            "<if test='endDate != null and endDate != \"\"'> AND DATE(created_at) <= #{endDate}</if>",
+            " ORDER BY created_at DESC",
+            "</script>"
+    })
+    List<User> findByConditions(@Param("username") String username,
+                                @Param("phone") String phone,
+                                @Param("email") String email,
+                                @Param("status") Integer status,
+                                @Param("role") String role,
+                                @Param("startDate") String startDate,
+                                @Param("endDate") String endDate);
+
+    /**
+     * 更新用户状态（启用/禁用）
+     */
+    @Update("UPDATE users SET status = #{status}, updated_at = NOW() WHERE id = #{id}")
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 }

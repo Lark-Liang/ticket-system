@@ -21,18 +21,19 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/auth/login",              // 登录
-                        "/auth/login/email",         // 邮箱登录
-                        "/auth/refresh",              // 刷新Token
-                        "/shows/home",                 // 首页演出
-                        "/shows/search",                // 搜索
-                        "/shows/list",                   // 演出列表
-                        "/shows/cities",                  // 城市列表
-                        "/shows/categories",              // 分类列表
-                        "/shows/*",                        // 演出详情
-                        "/api/config/jwt/test",            // JWT生成测试
-                        "/api/config/token/test",          // Token工具测试
-                        "/error"                           // 错误页面
+                        "/auth/login",   // 登录
+                        "/auth/login/email",   // 邮箱登录
+                        "/auth/refresh",   // 刷新Token
+                        "/admin/auth/login",   //管理员登录
+                        "/shows/home",   // 首页演出
+                        "/shows/search",   // 搜索
+                        "/shows/list",   // 演出列表
+                        "/shows/cities",   // 城市列表
+                        "/shows/categories",   // 分类列表
+                        "/shows/*",   // 演出详情
+                        "/api/config/jwt/test",   // JWT生成测试
+                        "/api/config/token/test",   // Token工具测试
+                        "/error"   // 错误页面
                 );
     }
 }
